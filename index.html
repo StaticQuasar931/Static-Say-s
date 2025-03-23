@@ -1,1 +1,714 @@
-rawr
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Static Says - by StaticQuasar931</title>
+  <!-- SEO & Indexing -->
+  <meta name="description" content="Play Static Says – the fast-paced memory reaction game by StaticQuasar931. Like Simon Says but harder, faster, and more fun. Try to beat your high score!">
+  <meta name="keywords" content="Static Says game, simon says unblocked, memory game, color clicker, reaction game, school game, shape clicker, circle square game, play at school, static says simon, color memory game, staticquasar931 games, static games, static says online, fun school games, simon says school safe">
+
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background: #202020;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a {
+      color: #0af;
+      text-decoration: none;
+    }
+
+    /* STATIC MENU (top-left) */
+    #staticMenu {
+      position: fixed; top: 10px; left: 10px;
+      background: #222; color: #fff;
+      padding: 10px 15px; border-radius: 8px;
+      z-index: 9999;
+      box-shadow: 0 0 8px rgba(0,0,0,0.6);
+      animation: twinkle 2s infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { box-shadow: 0 0 8px rgba(0,255,255,0.7); }
+      50% { box-shadow: 0 0 4px rgba(0,255,255,0.2); }
+    }
+    #closeMenu {
+      background: #444; color: #fff; border: none;
+      padding: 4px 8px; cursor: pointer;
+    }
+
+    /* SETTINGS (top-right) */
+    #settingsButton {
+      position: fixed; top: 10px; right: 10px;
+      background: #444; color: #fff;
+      border: 1px solid #666;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+    #settingsButton:hover { background: #333; }
+
+    /* QR CODE (bottom-left) */
+    #qrCode {
+      position: fixed; bottom: 10px; left: 10px;
+      width: 100px; height: 100px;
+      z-index: 9999;
+    }
+
+    /* STATS (bottom-right) */
+    #statsContainer {
+      position: fixed; bottom: 10px; right: 10px;
+      background: rgba(0,0,0,0.6); color: #fff;
+      padding: 8px 12px; border-radius: 6px;
+      font-size: 0.9rem; line-height: 1.4em;
+      z-index: 9999;
+    }
+
+    /* MAIN MENU SCREEN */
+    #mainMenu {
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      width: 100%; height: 100%;
+    }
+    #gameTitle {
+      font-size: 3rem; margin-bottom: 1rem;
+      text-align: center;
+    }
+    #mapSelectContainer {
+      display: flex; gap: 20px;
+      margin: 20px 0;
+    }
+    .mapChoice {
+      width: 150px; height: 100px;
+      background: #333; color: #fff;
+      display: flex; justify-content: center; align-items: center;
+      cursor: pointer; border-radius: 8px;
+      box-shadow: 0 0 8px rgba(255,255,255,0.1);
+      transition: transform 0.2s, background 0.2s;
+      text-align: center;
+    }
+    .mapChoice:hover {
+      transform: scale(1.05);
+      background: #444;
+    }
+    .mapDisabled {
+      background: #555 !important;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    /* Difficulty Screen */
+    #difficultySelectContainer {
+      display: none;  /* shown after map chosen */
+      flex-direction: column; gap: 10px;
+      margin-top: 20px; text-align: center;
+    }
+    .difficultyChoice {
+      width: 200px; padding: 10px 0;
+      margin: 0 auto;
+      border-radius: 8px; color: #fff;
+      font-weight: bold; cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .difficultyChoice:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+    #easyBtn { background: green; }
+    #mediumBtn { background: orange; }
+    #hardcoreBtn { background: red; }
+
+    /* RULES SCREEN */
+    #rulesOverlay {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none; /* shown after difficulty chosen */
+      justify-content: center; align-items: center;
+      z-index: 2000;
+    }
+    #rulesBox {
+      background: #222;
+      padding: 20px 30px;
+      border-radius: 10px;
+      max-width: 600px; text-align: center;
+    }
+    #rulesBox h2 {
+      margin-bottom: 10px;
+    }
+    #rulesBox p {
+      margin: 10px 0;
+      line-height: 1.4em;
+    }
+    #startGameBtn {
+      margin-top: 15px; padding: 10px 20px;
+      font-size: 1rem; border: none; border-radius: 6px;
+      cursor: pointer; color: #fff;
+    }
+
+    /* ACTUAL GAME AREA */
+    #gameArea {
+      display: none;  /* hidden until start */
+      position: relative;
+      width: 100%; height: 100%;
+      overflow: hidden;
+    }
+    /* Example shapes / items in the map (Map 1) */
+    #map1Container {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; justify-content: center; align-items: center;
+    }
+    .shapeItem {
+      position: absolute;
+      width: 60px; height: 60px;
+      border: 3px solid #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; font-size: 1.2rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    /* Example positioning (just to show shapes in corners, etc.) */
+    #squareBottomLeft {
+      bottom: 20px; left: 20px;
+      background: #1f1f1f;
+    }
+    #circleTopRight {
+      top: 20px; right: 20px;
+      background: #1f1f1f; border-radius: 50%;
+    }
+    #redNumberSeven {
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1f1f1f;
+    }
+    #triangleTopLeft {
+      top: 50px; left: 50px;
+      width: 0; height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-bottom: 60px solid blue;
+      background: none; border: none;
+      transform: none; /* override shapeItem */
+      cursor: pointer;
+    }
+
+    /* COMMAND DISPLAY + SCORE HUD IN-GAME */
+    #commandDisplay {
+      position: absolute; top: 50px; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.6);
+      padding: 10px 15px; border-radius: 8px;
+      font-size: 1.2rem; text-align: center;
+      min-width: 200px;
+    }
+    #scoreHUD {
+      position: absolute; left: 10px; top: 200px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 6px;
+      padding: 10px;
+      line-height: 1.4em;
+      min-width: 120px;
+    }
+
+    /* GAME OVER SCREEN */
+    #gameOverOverlay {
+      display: none; /* shown on game over */
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center; align-items: center;
+      z-index: 3000;
+      text-align: center;
+    }
+    #gameOverBox {
+      background: #222; padding: 30px;
+      border-radius: 10px; width: 300px;
+    }
+    #gameOverBox h2 { margin-bottom: 15px; }
+    #gameOverBox button {
+      background: #444; color: #fff; border: none;
+      padding: 10px 20px; cursor: pointer; border-radius: 6px;
+    }
+    #gameOverBox button:hover { background: #666; }
+
+  </style>
+</head>
+<body>
+
+  <!-- STATIC MENU (top-left) -->
+  <div id="staticMenu">
+    <a href="https://sites.google.com/view/staticquasar931/gm3z" target="_blank">More Unblocked Games by Static</a>
+    <button id="closeMenu">✖</button>
+  </div>
+
+  <!-- SETTINGS (top-right) -->
+  <button id="settingsButton">Settings</button>
+
+  <!-- QR CODE (bottom-left) -->
+  <img id="qrCode" src="https://res.cloudinary.com/dcsrqennd/image/upload/v1733694622/frame_1_vmv9y3.png" alt="QR Code" />
+
+  <!-- STATS (bottom-right) -->
+  <div id="statsContainer">
+    <strong>Global Stats</strong><br/>
+    Total Rounds Played: <span id="totalRoundsSpan">0</span><br/>
+    <strong>Easy</strong> – Rounds: <span id="easyRoundsSpan">0</span>, High Score: <span id="easyHighSpan">0</span><br/>
+    <strong>Medium</strong> – Rounds: <span id="mediumRoundsSpan">0</span>, High Score: <span id="mediumHighSpan">0</span><br/>
+    <strong>Hardcore</strong> – Rounds: <span id="hardcoreRoundsSpan">0</span>, High Score: <span id="hardcoreHighSpan">0</span>
+  </div>
+
+  <!-- MAIN MENU -->
+  <div id="mainMenu">
+    <div id="gameTitle">🌀 Static Says</div>
+    <div id="mapSelectContainer">
+      <!-- Map 1 (Active) -->
+      <div class="mapChoice" id="map1Btn">
+        <span>Map 1</span>
+      </div>
+      <!-- Map 2 (Disabled) -->
+      <div class="mapChoice mapDisabled" id="map2Btn">
+        <span>Map 2 (Coming Soon)</span>
+      </div>
+      <!-- Map 3 (Disabled) -->
+      <div class="mapChoice mapDisabled" id="map3Btn">
+        <span>Map 3 (Coming Soon)</span>
+      </div>
+    </div>
+
+    <!-- Difficulty menu appears after map selection -->
+    <div id="difficultySelectContainer">
+      <div class="difficultyChoice" id="easyBtn">EASY</div>
+      <div class="difficultyChoice" id="mediumBtn">MEDIUM</div>
+      <div class="difficultyChoice" id="hardcoreBtn">HARDCORE</div>
+    </div>
+  </div>
+
+  <!-- RULES OVERLAY (Appears after choosing difficulty) -->
+  <div id="rulesOverlay">
+    <div id="rulesBox">
+      <h2>How to Play Static Says</h2>
+      <p>
+        - In each round, you will see a command.<br/>
+        - If the command starts with <strong>"Static says"</strong>, you <em>must</em> do it.<br/>
+        - If it does not start with "Static says", do <em>nothing</em>!<br/>
+        - Each correct round = +1 point. Game speeds up over time.<br/>
+        - Lives and speed vary by difficulty.<br/>
+      </p>
+      <button id="startGameBtn">Start</button>
+    </div>
+  </div>
+
+  <!-- ACTUAL GAME AREA -->
+  <div id="gameArea">
+    <!-- MAP 1 container (only one enabled now) -->
+    <div id="map1Container">
+      <!-- Example shapes/numbers -->
+      <div class="shapeItem" id="squareBottomLeft">□</div>
+      <div class="shapeItem" id="circleTopRight">⚫</div>
+      <div class="shapeItem" id="redNumberSeven">7</div>
+      <div id="triangleTopLeft"></div>
+    </div>
+
+    <!-- HUD / Overlays -->
+    <div id="commandDisplay"></div>
+    <div id="scoreHUD">
+      <div>Difficulty: <span id="currentDifficulty">-</span></div>
+      <div>Lives: <span id="livesCount">0</span></div>
+      <div>Round Score: <span id="roundScore">0</span></div>
+      <div>High Score: <span id="currHighScore">0</span></div>
+    </div>
+  </div>
+
+  <!-- GAME OVER OVERLAY -->
+  <div id="gameOverOverlay">
+    <div id="gameOverBox">
+      <h2>Game Over</h2>
+      <p id="gameOverMsg"></p>
+      <button id="menuReturnBtn">Return to Main Menu</button>
+    </div>
+  </div>
+
+  <script>
+  /********************************************************
+    LOCAL STORAGE SETUP
+  *********************************************************/
+  let defaultStats = {
+    totalRounds: 0,
+    easy: { roundsPlayed: 0, highScore: 0 },
+    medium: { roundsPlayed: 0, highScore: 0 },
+    hardcore: { roundsPlayed: 0, highScore: 0 }
+  };
+  let gameStats = JSON.parse(localStorage.getItem('staticSaysStats')) || defaultStats;
+
+  function saveStatsToLocal() {
+    localStorage.setItem('staticSaysStats', JSON.stringify(gameStats));
+  }
+
+  /********************************************************
+    UPDATE STATS UI (BOTTOM-RIGHT)
+  *********************************************************/
+  function updateStatsUI() {
+    document.getElementById('totalRoundsSpan').textContent = gameStats.totalRounds;
+    document.getElementById('easyRoundsSpan').textContent = gameStats.easy.roundsPlayed;
+    document.getElementById('easyHighSpan').textContent = gameStats.easy.highScore;
+    document.getElementById('mediumRoundsSpan').textContent = gameStats.medium.roundsPlayed;
+    document.getElementById('mediumHighSpan').textContent = gameStats.medium.highScore;
+    document.getElementById('hardcoreRoundsSpan').textContent = gameStats.hardcore.roundsPlayed;
+    document.getElementById('hardcoreHighSpan').textContent = gameStats.hardcore.highScore;
+  }
+
+  updateStatsUI();
+
+  /********************************************************
+    GLOBAL DOM ELEMENTS
+  *********************************************************/
+  const mainMenu = document.getElementById('mainMenu');
+  const difficultySelect = document.getElementById('difficultySelectContainer');
+  const rulesOverlay = document.getElementById('rulesOverlay');
+  const startGameBtn = document.getElementById('startGameBtn');
+  const gameArea = document.getElementById('gameArea');
+  const commandDisplay = document.getElementById('commandDisplay');
+  const gameOverOverlay = document.getElementById('gameOverOverlay');
+  const gameOverMsg = document.getElementById('gameOverMsg');
+  const menuReturnBtn = document.getElementById('menuReturnBtn');
+  const livesCount = document.getElementById('livesCount');
+  const roundScoreEl = document.getElementById('roundScore');
+  const currHighScoreEl = document.getElementById('currHighScore');
+  const currentDifficultyEl = document.getElementById('currentDifficulty');
+
+  /* MAP 1 items */
+  const squareBottomLeft = document.getElementById('squareBottomLeft');
+  const circleTopRight = document.getElementById('circleTopRight');
+  const redNumberSeven = document.getElementById('redNumberSeven');
+  const triangleTopLeft = document.getElementById('triangleTopLeft'); 
+
+  /* Difficulty Buttons */
+  const easyBtn = document.getElementById('easyBtn');
+  const mediumBtn = document.getElementById('mediumBtn');
+  const hardcoreBtn = document.getElementById('hardcoreBtn');
+
+  /* MAP Buttons */
+  const map1Btn = document.getElementById('map1Btn');
+  const map2Btn = document.getElementById('map2Btn');
+  const map3Btn = document.getElementById('map3Btn');
+
+  /********************************************************
+    GAME DATA
+  *********************************************************/
+  let currentDifficulty = '';
+  let lives = 0;
+  let roundScore = 0;
+  let currentHighScore = 0;
+  let roundActive = false; // to prevent multiple clicks
+  let timerID = null;      // to handle time limit
+  let commandTimeLimit = 2500; // ms, modifies by difficulty/round
+
+  // For simpler demonstration, let's store the shape references
+  // in an array with meta info (like name, color, location).
+  const map1Items = [
+    { id: 'squareBottomLeft',   ref: squareBottomLeft,   name: 'square in the bottom left corner', shape: 'square', color: 'none' },
+    { id: 'circleTopRight',     ref: circleTopRight,     name: 'circle in the top right corner',  shape: 'circle', color: 'none' },
+    { id: 'redNumberSeven',     ref: redNumberSeven,     name: 'red #7',                          shape: 'number7', color: 'red' },
+    { id: 'triangleTopLeft',    ref: triangleTopLeft,    name: 'blue triangle in top left',       shape: 'triangle', color: 'blue' }
+  ];
+
+  // Probability of advanced command (multi-step) after certain round
+  let multiStepThreshold = 5;
+
+  /********************************************************
+    MAIN MENU INTERACTIONS
+  *********************************************************/
+  // Only Map 1 is enabled for now
+  map1Btn.addEventListener('click', () => {
+    difficultySelect.style.display = 'flex';
+  });
+  // Disabled
+  map2Btn.addEventListener('click', () => { /* no-op */ });
+  map3Btn.addEventListener('click', () => { /* no-op */ });
+
+  /********************************************************
+    DIFFICULTY SELECTION
+  *********************************************************/
+  easyBtn.addEventListener('click', () => {
+    currentDifficulty = 'easy';
+    lives = 4;
+    commandTimeLimit = 3000; // slower speed
+    currentHighScore = gameStats.easy.highScore;
+    showRulesOverlay();
+  });
+  mediumBtn.addEventListener('click', () => {
+    currentDifficulty = 'medium';
+    lives = 2;
+    commandTimeLimit = 2200; // a bit faster
+    currentHighScore = gameStats.medium.highScore;
+    showRulesOverlay();
+  });
+  hardcoreBtn.addEventListener('click', () => {
+    currentDifficulty = 'hardcore';
+    lives = 1;
+    commandTimeLimit = 1500; // fastest
+    currentHighScore = gameStats.hardcore.highScore;
+    showRulesOverlay();
+  });
+
+  /********************************************************
+    RULES OVERLAY -> START GAME
+  *********************************************************/
+  function showRulesOverlay() {
+    rulesOverlay.style.display = 'flex';
+  }
+  startGameBtn.addEventListener('click', () => {
+    rulesOverlay.style.display = 'none';
+    startGame();
+  });
+
+  /********************************************************
+    START THE GAME
+  *********************************************************/
+  function startGame() {
+    // Hide main menu, show game area
+    mainMenu.style.display = 'none';
+    difficultySelect.style.display = 'none';
+    gameArea.style.display = 'block';
+    gameOverOverlay.style.display = 'none';
+
+    roundScore = 0;
+    updateHUD();
+    nextRound();
+  }
+
+  function updateHUD() {
+    currentDifficultyEl.textContent = currentDifficulty.toUpperCase();
+    livesCount.textContent = lives;
+    roundScoreEl.textContent = roundScore;
+    currHighScoreEl.textContent = currentHighScore;
+  }
+
+  /********************************************************
+    GAME ROUND
+  *********************************************************/
+  function nextRound() {
+    roundActive = true;
+    // Possibly speed up as rounds progress
+    // (example: each round reduces time limit by some ms)
+    let speedAdjust = roundScore * 50; // 50ms less per round
+    let effectiveTime = Math.max(commandTimeLimit - speedAdjust, 800);
+
+    // Generate new command:
+    const { instructionText, correctItems, staticSays } = generateCommand(roundScore);
+
+    // Show command:
+    commandDisplay.textContent = instructionText;
+    commandDisplay.style.display = 'block';
+
+    // Timer: if command is not completed in time => lose life (or end)
+    timerID = setTimeout(() => {
+      // If user needed to do something and didn't do it => lose life
+      // But if "Static doesn't say" => success if we do nothing
+      if(staticSays) {
+        // We missed the command
+        loseLife();
+      } else {
+        // We actually succeeded by doing nothing
+        finalizeRound(true);
+      }
+    }, effectiveTime);
+    
+    // We need a way to track the correct items user must click if "Static says..."
+    // For multi-step commands, they must do them in order. Simplify for now:
+    if (staticSays) {
+      // We'll store an array of correct IDs user must click, in order
+      // For multi-step, we push multiple.
+      let requiredClicks = [...correctItems];
+      let clickIndex = 0;
+
+      // Handler for any shape click:
+      function shapeClickHandler(e) {
+        if(!roundActive) return;
+
+        const clickedId = e.target.id;
+        // Check if user clicked the correct next item:
+        if (clickedId === requiredClicks[clickIndex]) {
+          clickIndex++;
+          // If we are done with all steps, finalize success
+          if (clickIndex >= requiredClicks.length) {
+            finalizeRound(true);
+          }
+        } else {
+          // Wrong item => lose a life
+          finalizeRound(false);
+        }
+      }
+
+      // Attach click events:
+      map1Items.forEach(itemObj => {
+        itemObj.ref.addEventListener('click', shapeClickHandler);
+      });
+
+      // Once round ends, we detach
+      function finalizeRound(success) {
+        roundActive = false;
+        map1Items.forEach(itemObj => {
+          itemObj.ref.removeEventListener('click', shapeClickHandler);
+        });
+        clearTimeout(timerID);
+
+        if(!success) {
+          loseLife();
+        } else {
+          roundScore++;
+          gameStats.totalRounds++;
+          // Increase difficulty-based stat
+          gameStats[currentDifficulty].roundsPlayed++;
+          updateStatsUI();
+          saveStatsToLocal();
+
+          nextRound();
+        }
+        updateHUD();
+      }
+    } else {
+      // "Static doesn't say" => correct action is to do nothing
+      // We handle clicks:
+      function shapeClickHandler(e) {
+        if(!roundActive) return;
+        // They clicked something => that's a fail
+        finalizeRound(false);
+      }
+      map1Items.forEach(itemObj => {
+        itemObj.ref.addEventListener('click', shapeClickHandler);
+      });
+
+      function finalizeRound(success) {
+        roundActive = false;
+        map1Items.forEach(itemObj => {
+          itemObj.ref.removeEventListener('click', shapeClickHandler);
+        });
+        clearTimeout(timerID);
+
+        if(!success) {
+          loseLife();
+        } else {
+          roundScore++;
+          gameStats.totalRounds++;
+          gameStats[currentDifficulty].roundsPlayed++;
+          updateStatsUI();
+          saveStatsToLocal();
+
+          nextRound();
+        }
+        updateHUD();
+      }
+    }
+  }
+
+  /********************************************************
+    GENERATE COMMAND
+  *********************************************************/
+  function generateCommand(currentRound) {
+    // Decide if "Static says" or not
+    // For fun, let's do 70% chance "Static says", 30% "doesn't say"
+    let staticSays = Math.random() < 0.7;
+
+    // Pick from map1Items randomly
+    // Possibly do multiple steps if round > multiStepThreshold
+    let stepsCount = 1;
+    if (currentRound >= multiStepThreshold) {
+      // Up to 2 steps
+      stepsCount = Math.random() < 0.5 ? 2 : 1;
+    }
+    let chosenItems = [];
+    for (let i = 0; i < stepsCount; i++) {
+      let randomItem = map1Items[Math.floor(Math.random() * map1Items.length)];
+      chosenItems.push(randomItem);
+    }
+
+    let instructionText = '';
+    if (staticSays) instructionText += 'Static says ';
+
+    // Build out multi-step text, e.g. "click on the red #7" or "click on the square in the bottom left corner, then the circle..."
+    // For color-coded text in Easy/Medium, mismatch in Hardcore
+    let colorMatch = (currentDifficulty !== 'hardcore'); 
+    for (let i = 0; i < chosenItems.length; i++) {
+      const item = chosenItems[i];
+      // We'll highlight the color if colorMatch = true
+      let itemDesc = item.name;
+      // For demonstration, let's do minimal actual color styling:
+      if (item.color !== 'none') {
+        let colorText = item.color;
+        let cssColor = item.color;
+        if (!colorMatch) {
+          // Hardcore => random color to throw them off
+          const possibleColors = ['blue','green','yellow','pink','white','cyan'];
+          cssColor = possibleColors[Math.floor(Math.random() * possibleColors.length)];
+        }
+        // Replace the color word in itemDesc with a <span> that is colored
+        // Just do a simple replace if the color is mentioned
+        itemDesc = itemDesc.replace(item.color, `<span style="color:${cssColor};">${item.color}</span>`);
+      }
+      instructionText += (i===0?'click on the ': ' then the ') + itemDesc;
+    }
+
+    return {
+      instructionText,
+      correctItems: chosenItems.map(ci => ci.id),
+      staticSays
+    }
+  }
+
+  /********************************************************
+    LOSE LIFE
+  *********************************************************/
+  function loseLife() {
+    lives--;
+    if (lives <= 0) {
+      endGame();
+    } else {
+      updateHUD();
+      nextRound();
+    }
+  }
+
+  /********************************************************
+    END GAME
+  *********************************************************/
+  function endGame() {
+    // Update high score if needed
+    if (roundScore > currentHighScore) {
+      currentHighScore = roundScore;
+      gameStats[currentDifficulty].highScore = roundScore;
+      saveStatsToLocal();
+    }
+    // Show overlay
+    gameOverMsg.textContent = 'Your Score: ' + roundScore;
+    gameOverOverlay.style.display = 'flex';
+
+    // Show main menu button
+  }
+
+  menuReturnBtn.addEventListener('click', () => {
+    // Return to main menu
+    gameArea.style.display = 'none';
+    gameOverOverlay.style.display = 'none';
+    mainMenu.style.display = 'flex';
+    updateStatsUI();
+  });
+
+  /********************************************************
+    MISC (Close Static Menu, etc.)
+  *********************************************************/
+  document.getElementById('closeMenu').addEventListener('click', () => {
+    document.getElementById('staticMenu').style.display = 'none';
+  });
+  document.getElementById('settingsButton').addEventListener('click', () => {
+    alert('Settings not implemented yet!');
+  });
+  </script>
+</body>
+</html>
