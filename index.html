@@ -31,7 +31,10 @@
       justify-content: center;
       position: relative;
     }
-    a { color: #0af; text-decoration: none; }
+    a { 
+      color: #0af; 
+      text-decoration: none; 
+    }
 
     /********************************************************
       STATIC MENU (top-left)
@@ -112,12 +115,11 @@
       transform: scale(1.05);
       background: #777;
     }
-    /* Clicking outside content to close */
     .overlay.clickOutsideClose {
       cursor: pointer;
     }
     .overlayContent {
-      cursor: auto; /* so content doesn't look clickable */
+      cursor: auto; 
     }
 
     /********************************************************
@@ -434,7 +436,7 @@
       height: 2px; top: 50%;
     }
 
-    /* SHAPES (some big or small). */
+    /* SHAPES */
     .map1Shape {
       position: absolute;
       display: flex; 
@@ -457,27 +459,27 @@
     .bigCircle { width: 80px; height: 80px; border-radius: 50%; font-size:1.2rem;}
     .smallCircle { width: 40px; height: 40px; border-radius: 50%; font-size:0.8rem;}
 
-    /* Example positions, 20 shapes */
+    /* Example positions for 20 shapes */
     #shape1  { top: 80px; left: 50px;   background: red;       color: #fff; }
     #shape2  { top: 80px; right: 70px;  background: blue;      color: #fff; }
     #shape3  { bottom: 70px; left: 50px;  background: black;     color: #fff; }
     #shape4  { bottom: 70px; right: 70px; background: orange;    color: #000; }
-    #shape5  { top: 200px; left: 25%;  background: pink;      color: #000; }
-    #shape6  { top: 200px; left: 60%;  background: purple;    color: #fff; }
-    #shape7  { top: 300px; left: 15%;  background: white;     color: #000; }
-    #shape8  { top: 300px; left: 45%;  background: yellow;    color: #000; }
-    #shape9  { top: 300px; left: 75%;  background: black;     color: #fff; }
-    #shape10 { bottom: 150px; left: 20%; background: red;     color: #fff; }
-    #shape11 { bottom: 150px; left: 50%; background: pink;    color: #000; }
-    #shape12 { bottom: 150px; left: 80%; background: white;   color: #000; }
-    #shape13 { top: 120px; left: 40%;   background: black;    color: #fff; }
-    #shape14 { top: 120px; left: 55%;   background: purple;   color: #fff; }
-    #shape15 { top: 400px; left: 60%;   background: white;    color: #000; }
-    #shape16 { top: 350px; left: 35%;   background: pink;     color: #000; }
-    #shape17 { top: 100px; right: 20%;  background: red;      color: #fff; }
-    #shape18 { bottom: 200px; left: 30%; background: orange;  color: #000; }
-    #shape19 { bottom: 250px; right: 30%; background: blue;   color: #fff; }
-    #shape20 { top: 250px; left: 5%;   background: black;     color: #fff; }
+    #shape5  { top: 200px; left: 25%;    background: pink;      color: #000; }
+    #shape6  { top: 200px; left: 60%;    background: purple;    color: #fff; }
+    #shape7  { top: 300px; left: 15%;    background: white;     color: #000; }
+    #shape8  { top: 300px; left: 45%;    background: yellow;    color: #000; }
+    #shape9  { top: 300px; left: 75%;    background: black;     color: #fff; }
+    #shape10 { bottom: 150px; left: 20%; background: red;       color: #fff; }
+    #shape11 { bottom: 150px; left: 50%; background: pink;      color: #000; }
+    #shape12 { bottom: 150px; left: 80%; background: white;     color: #000; }
+    #shape13 { top: 120px; left: 40%;    background: black;     color: #fff; }
+    #shape14 { top: 120px; left: 55%;    background: purple;    color: #fff; }
+    #shape15 { top: 400px; left: 60%;    background: white;     color: #000; }
+    #shape16 { top: 350px; left: 35%;    background: pink;      color: #000; }
+    #shape17 { top: 100px; right: 20%;   background: red;       color: #fff; }
+    #shape18 { bottom: 200px; left: 30%; background: orange;    color: #000; }
+    #shape19 { bottom: 250px; right: 30%; background: blue;     color: #fff; }
+    #shape20 { top: 250px; left: 5%;     background: black;     color: #fff; }
 
     /********************************************************
       IN-GAME HUD
@@ -513,7 +515,6 @@
       pointer-events: none;
       max-width: 600px;
     }
-
     /* Middle-left stats panel during match */
     #scoreHUD {
       position: absolute; 
@@ -530,7 +531,6 @@
     .label {
       font-weight: bold;
     }
-    /* Violent shimmer on livesCount */
     .lifeShimmer {
       animation: shimmer 0.4s 2;
     }
@@ -538,6 +538,29 @@
       0% { color: #fff; }
       50% { color: #f00; text-shadow: 0 0 5px #f00; }
       100% { color: #fff; }
+    }
+
+    /********************************************************
+      NO ACTION BUTTON (bottom-right)
+    *********************************************************/
+    #noActionBtn {
+      position: absolute; 
+      bottom: 20px; 
+      right: 20px;
+      background: #555; 
+      color: #fff; 
+      border: none; 
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 99;
+      display: none; /* Shown each round */
+      transition: background 0.2s, transform 0.2s;
+    }
+    #noActionBtn:hover {
+      background: #777;
+      transform: scale(1.05);
     }
 
     /********************************************************
@@ -597,7 +620,7 @@
     }
 
     /********************************************************
-      GAME OVER
+      GAME OVER OVERLAY
     *********************************************************/
     #gameOverOverlay {
       display: none; 
@@ -678,7 +701,6 @@
         <label for="soundSlider">Sound Volume:</label><br/>
         <input type="range" id="soundSlider" min="0" max="100" value="50" />
       </div>
-
       <!-- FEEDBACK LINK -->
       <div class="settingsRow">
         <a 
@@ -688,7 +710,6 @@
           Leave feedback via this Google Form
         </a>
       </div>
-
       <div class="settingsRow">
         <button id="openShareOverlayBtn">Share This Game</button>
       </div>
@@ -787,7 +808,6 @@
       <!-- Quadrant dividing lines -->
       <div id="verticalLine"></div>
       <div id="horizontalLine"></div>
-
       <!-- 20 shapes -->
       <div class="map1Shape square"   id="shape1">1</div>
       <div class="map1Shape circle"   id="shape2">2</div>
@@ -811,17 +831,22 @@
       <div class="map1Shape square"      id="shape20">20</div>
     </div>
 
-    <!-- HUD -->
+    <!-- HUD (timer + command) -->
     <div id="inGameHUD">
       <div id="timeLeft">0s</div>
       <div id="commandText"></div>
     </div>
+
+    <!-- Middle-left stats in-game -->
     <div id="scoreHUD">
       <div><span class="label">Difficulty:</span> <span id="currentDifficulty">-</span></div>
       <div><span class="label">Lives:</span> <span id="livesCount">0</span></div>
       <div><span class="label">Score:</span> <span id="roundScore">0</span></div>
       <div><span class="label">High:</span> <span id="currHighScore">0</span></div>
     </div>
+
+    <!-- "No Action" Button in bottom-right -->
+    <button id="noActionBtn">No Action</button>
   </div>
 
   <!-- PAUSE OVERLAY (click to unpause) -->
@@ -897,6 +922,7 @@
   const currHighScoreEl      = document.getElementById('currHighScore');
   const currentDifficultyEl  = document.getElementById('currentDifficulty');
   const scoreHUD             = document.getElementById('scoreHUD');
+  const noActionBtn          = document.getElementById('noActionBtn');  // NEW
   const gameOverOverlay      = document.getElementById('gameOverOverlay');
   const gameOverMsg          = document.getElementById('gameOverMsg');
   const menuReturnBtn        = document.getElementById('menuReturnBtn');
@@ -993,8 +1019,8 @@
     mainMenu.style.display = 'none';
     difficultyMenu.style.display = 'flex';
   });
-  map2Btn.addEventListener('click', ()=>{});
-  map3Btn.addEventListener('click', ()=>{});
+  map2Btn.addEventListener('click', ()=>{/* no-op */});
+  map3Btn.addEventListener('click', ()=>{/* no-op */});
 
   // DIFFICULTY
   let currentDifficulty = '';
@@ -1005,7 +1031,7 @@
   easyBtn.addEventListener('click', () => {
     currentDifficulty = 'easy';
     lives = 4;
-    baseTimeLimit = 9000;   // triple time
+    baseTimeLimit = 9000;  
     currentHighScore = gameStats.easy.highScore;
     showRulesOverlay("Easy Mode");
   });
@@ -1050,7 +1076,7 @@
   let currentRound=0;
   let timeLimit=9000;
 
-  // SHAPE DEFINITIONS (some have locPhrase for extra variety)
+  // SHAPE DEFINITIONS
   const shapeDefinitions=[
     { id:"shape1",  color:"red",     shapeType:"square", hasNumber:"1",    locPhrase:"top-left corner" },
     { id:"shape2",  color:"blue",    shapeType:"circle", hasNumber:"2" },
@@ -1093,18 +1119,24 @@
     scoreHUD.style.display='block';
     inGameHUD.style.display='flex';
 
+    // Hide "No Action" button initially
+    noActionBtn.style.display='none';
+
     nextRound();
   }
 
   /********************************************************
     NEXT ROUND
   *********************************************************/
+  let currentStaticSays = false; // track for "No Action" logic
+
   function nextRound(){
     roundActive=true;
     currentRound++;
     timeLimit=Math.max(baseTimeLimit-(currentRound*200),1500);
 
     let staticSays=(Math.random()<0.7);
+    currentStaticSays = staticSays; // store for No Action button
     // Weighted commands
     let possibilities=["click","click","click","hover","click","quadrant"];
     let commandType=possibilities[Math.floor(Math.random()*possibilities.length)];
@@ -1120,6 +1152,9 @@
       let s=shapeDefinitions[Math.floor(Math.random()*shapeDefinitions.length)];
       chosenShapes.push(s);
     }
+
+    // We always show the "No Action" button for a round:
+    noActionBtn.style.display='block';
 
     let finalCommandText= staticSays? "Static says: ":"";
 
@@ -1139,6 +1174,7 @@
           if(userQuad===requiredQuad) finalizeRound(true);
           else finalizeRound(false);
         } else {
+          // static didn't say => user must NOT be in that quadrant
           if(userQuad===requiredQuad) finalizeRound(false);
           else finalizeRound(true);
         }
@@ -1182,6 +1218,7 @@
           let ref=document.getElementById(s.id);
           ref.removeEventListener('mouseover',mouseOverHandler);
         });
+        noActionBtn.style.display='none';
       }
 
     } else {
@@ -1234,6 +1271,7 @@
             let ref=document.getElementById(s.id);
             ref.removeEventListener('click',clickHandler);
           });
+          noActionBtn.style.display='none';
         }
 
       } else {
@@ -1258,6 +1296,7 @@
             let ref=document.getElementById(s.id);
             ref.removeEventListener('click',clickHandler);
           });
+          noActionBtn.style.display='none';
         }
       }
     }
@@ -1281,14 +1320,26 @@
     }
   }
 
+  // "No Action" button logic:
+  // if "Static says" => immediate fail
+  // if "doesn't say" => immediate success
+  noActionBtn.addEventListener('click', () => {
+    if(!roundActive) return;
+    finalizeNoActionClick(!currentStaticSays);
+  });
+  function finalizeNoActionClick(success){
+    roundActive=false;
+    clearTimeout(timerID);
+    clearInterval(countdownInterval);
+    noActionBtn.style.display='none';
+    handleRoundEnd(success);
+  }
+
   // SHAPE TEXT
   function shapeObjText(sh){
-    // We do NOT show "cb" or "cbm" in the command text
-    // The colorBlindToggle could change the *visual rendering*, 
-    // but we won't alter the text with any tag or "cb" label.
-    // We'll just produce normal color references:
+    // We do NOT add "CB" or anything in the command text
+    // The colorBlindToggle might be used for visual patterns, not text.
     let cLabel=sh.color;
-
     let shapeLabel="";
     if(sh.shapeType==="bigCircle") shapeLabel="big circle";
     else if(sh.shapeType==="smallCircle") shapeLabel="small circle";
@@ -1304,7 +1355,7 @@
     return phrase;
   }
 
-  // MOUSE QUADRANT
+  // GET MOUSE QUADRANT
   let mouseX=0, mouseY=0;
   function getMouseQuadrant(){
     let rect=gameArea.getBoundingClientRect();
@@ -1336,7 +1387,9 @@
       livesCountEl.classList.add('lifeShimmer');
       setTimeout(()=>{ livesCountEl.classList.remove('lifeShimmer'); },800);
     }
-    updateStatsUI(); saveStatsToLocal();
+    updateStatsUI(); 
+    saveStatsToLocal();
+
     roundScoreEl.textContent=roundScore;
     livesCountEl.textContent=lives;
 
@@ -1356,6 +1409,8 @@
     roundActive=false;
     clearTimeout(timerID);
     clearInterval(countdownInterval);
+    noActionBtn.style.display='none';
+
     if(roundScore>currentHighScore){
       currentHighScore=roundScore;
       gameStats[currentDifficulty].highScore=roundScore;
