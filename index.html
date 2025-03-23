@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Static Says - by StaticQuasar931</title>
   <!-- SEO & Indexing -->
-  <meta name="description" content="Play Static Says – the fast-paced memory reaction game by StaticQuasar931. Inspired by Simon Says but with more shapes, colors, and speed! Try to beat your high score.">
-  <meta name="keywords" content="Static Says, simon says unblocked, memory game, reaction game, color shapes, shape clicker, staticquasar931 games, static says online">
+  <meta name="description" content="Play Static Says – the fast-paced memory reaction game by StaticQuasar931. Inspired by Simon Says but with shapes, colors, and speed! Try to beat your high score.">
+  <meta name="keywords" content="Static Says, simon says unblocked, memory game, reaction game, shape clicker, staticquasar931 games, static says online">
 
   <style>
     /********************************************************
@@ -16,14 +16,16 @@
       margin: 0; padding: 0; box-sizing: border-box;
       font-family: Arial, sans-serif;
     }
-    body {
+    html, body {
+      width: 100%; 
+      height: 100%; 
+      overflow: hidden;
       background: #202020; 
       color: #fff;
-      width: 100vw; 
-      height: 100vh; 
-      overflow: hidden;
+    }
+    body {
       display: flex; 
-      flex-direction: column;
+      flex-direction: column; 
       align-items: center;
       justify-content: center;
       position: relative;
@@ -50,14 +52,20 @@
       50% { box-shadow: 0 0 4px rgba(0,255,255,0.2); }
     }
     #closeMenu {
-      background: #444; color: #fff; 
-      border: none; cursor: pointer;
-      padding: 4px 8px; margin-left: 10px;
+      background: #444; 
+      color: #fff; 
+      border: none; 
+      cursor: pointer;
+      padding: 4px 8px; 
+      margin-left: 10px;
       border-radius: 4px;
+    }
+    #closeMenu:hover {
+      background: #666;
     }
 
     /********************************************************
-      SETTINGS MENU (top-right)
+      SETTINGS BUTTON (top-right)
     *********************************************************/
     #settingsButton {
       position: fixed; 
@@ -66,14 +74,21 @@
       background: #444; 
       color: #fff;
       border: 1px solid #666;
-      padding: 8px 12px;
-      border-radius: 4px;
+      padding: 12px 20px;  /* Bigger button */
+      font-size: 1.1rem;
+      border-radius: 6px;
       cursor: pointer;
       z-index: 9999;
+      transition: transform 0.2s, background 0.2s;
     }
-    #settingsButton:hover { background: #333; }
+    #settingsButton:hover { 
+      transform: scale(1.05);
+      background: #333; 
+    }
 
-    /* Settings Overlay */
+    /********************************************************
+      SETTINGS OVERLAY (3x bigger)
+    *********************************************************/
     #settingsOverlay {
       position: fixed; 
       top: 0; 
@@ -88,16 +103,38 @@
     }
     #settingsBox {
       background: #333; 
-      padding: 20px 30px; 
-      border-radius: 8px;
-      width: 300px; 
+      padding: 60px 90px; /* triple original */
+      border-radius: 12px;
+      width: 600px; 
       text-align: center;
       color: #fff;
     }
-    .settingsRow { margin: 15px 0; }
+    #settingsBox h3 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    .settingsRow { 
+      margin: 30px 0; /* bigger spacing */
+      font-size: 1.3rem; 
+    }
+    #closeSettingsBtn, #shareButton {
+      background: #555; 
+      color: #fff; 
+      border: none;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 10px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    #closeSettingsBtn:hover, #shareButton:hover {
+      background: #777;
+      transform: scale(1.05);
+    }
 
     /********************************************************
-      QR CODE (BOTTOM-LEFT) – bigger for main menu
+      QR CODE (bottom-left) - bigger
     *********************************************************/
     #qrContainer {
       position: fixed; 
@@ -110,10 +147,14 @@
       height: 140px;
       border: 2px solid #fff;
       border-radius: 8px;
+      transition: transform 0.2s;
+    }
+    #qrContainer img:hover {
+      transform: scale(1.05);
     }
 
     /********************************************************
-      GLOBAL STATS (BOTTOM-RIGHT) – bigger
+      GLOBAL STATS (bottom-right) - bigger
     *********************************************************/
     #statsContainer {
       position: fixed; 
@@ -121,14 +162,18 @@
       right: 10px;
       background: rgba(0,0,0,0.6); 
       color: #fff;
-      padding: 12px 16px; 
+      padding: 16px 22px; 
       border-radius: 8px;
-      font-size: 1rem; 
-      line-height: 1.6em;
+      font-size: 1.2rem; 
+      line-height: 1.8em;
       z-index: 9998;
+      transition: transform 0.2s;
+    }
+    #statsContainer:hover {
+      transform: scale(1.02);
     }
     #statsContainer strong {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
 
     /********************************************************
@@ -144,7 +189,7 @@
     }
     #gameTitle {
       font-size: 4rem; 
-      margin-bottom: 20px; 
+      margin-bottom: 30px; 
       text-align: center;
       font-weight: bold;
     }
@@ -166,10 +211,10 @@
       box-shadow: 0 0 8px rgba(255,255,255,0.1);
       transition: transform 0.2s, background 0.2s;
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
     .mapChoice:hover {
-      transform: scale(1.05);
+      transform: scale(1.08);
       background: #444;
     }
     .mapDisabled {
@@ -196,43 +241,42 @@
       text-align: center;
     }
     #difficultyNote {
-      margin-bottom: 20px; 
+      margin-bottom: 30px; 
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1.3rem;
       line-height: 1.4em;
     }
     #difficultySelectContainer {
       display: flex; 
       flex-direction: column; 
-      gap: 20px;
+      gap: 30px;
       text-align: center;
     }
     .difficultyChoice {
-      width: 200px; 
-      padding: 12px 0;
+      width: 300px; 
+      padding: 16px 0;
       margin: 0 auto;
       border-radius: 8px; 
       color: #fff;
       font-weight: bold; 
       cursor: pointer; 
-      font-size: 1.2rem;
+      font-size: 1.6rem;
       transition: transform 0.2s, box-shadow 0.2s;
     }
     .difficultyChoice:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 8px rgba(255,255,255,0.2);
+      transform: scale(1.08);
+      box-shadow: 0 0 12px rgba(255,255,255,0.2);
     }
     #easyBtn { background: green; }
     #mediumBtn { background: orange; }
+    /* Hardcore shakes while hovered *continuously* */
     #hardcoreBtn {
       background: red;
-      /* "Hardcore" vibe effect */
     }
     #hardcoreBtn:hover {
-      animation: shake 0.3s; 
-      animation-iteration-count: 1;
+      animation: hardcoreShake 0.3s infinite;
     }
-    @keyframes shake {
+    @keyframes hardcoreShake {
       0% { transform: translate(1px, 1px) rotate(0deg); }
       20% { transform: translate(-2px, -1px) rotate(-2deg); }
       40% { transform: translate(2px, 0px) rotate(1deg); }
@@ -242,7 +286,7 @@
     }
 
     /********************************************************
-      RULES/EXPLANATION OVERLAY (WITH MAP IN BG)
+      RULES/EXPLANATION OVERLAY
     *********************************************************/
     #rulesOverlay {
       display: none;
@@ -271,26 +315,44 @@
     }
     #startGameBtn {
       margin-top: 15px; 
-      padding: 10px 20px;
-      font-size: 1rem; 
+      padding: 12px 24px;
+      font-size: 1.2rem; 
       border: none; 
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer; 
       color: #fff;
+      background: #555;
+      transition: background 0.2s, transform 0.2s;
+    }
+    #startGameBtn:hover {
+      transform: scale(1.05);
+      background: #777;
     }
 
     /********************************************************
-      GAME AREA
+      GAME AREA (CHEERFUL BACKGROUND)
     *********************************************************/
     #gameArea {
       display: none; /* Show when game starts */
       position: relative;
       width: 100%; 
       height: 100%;
-      background: linear-gradient(135deg, #0f0f0f, #1f1f1f); /* Subtle color */
+      /* more cheerful gradient */
+      background: radial-gradient(circle, #559955, #77bb77);
       overflow: hidden;
     }
-    /* Map 1 container */
+
+    /* FLASH RED ON LIFE LOSS */
+    .lifeLossFlash {
+      animation: lifeLossAnim 0.5s;
+    }
+    @keyframes lifeLossAnim {
+      0% { background-color: rgba(255,0,0,0.7); }
+      50% { background-color: rgba(255,0,0,0); }
+      100% { background-color: rgba(255,0,0,0); }
+    }
+
+    /* MAP 1 container */
     #map1Container {
       position: absolute; 
       top: 0; 
@@ -298,12 +360,10 @@
       right: 0; 
       bottom: 0;
     }
-    /* Example: We'll define multiple shapes in distinct spots */
+
+    /* Example shapes in grayscale – text references color */
     .map1Shape {
       position: absolute;
-      width: 60px; 
-      height: 60px;
-      border: 2px solid #fff;
       display: flex; 
       align-items: center; 
       justify-content: center;
@@ -311,18 +371,27 @@
       font-size: 1rem;
       cursor: pointer; 
       user-select: none;
-      background: #333;
-      border-radius: 6px; 
+      background: #aaa;       /* Grayscale */
+      border: 2px solid #666;
+      color: #000;
       text-align: center;
+      transition: transform 0.2s;
     }
-    /* Circles override to be circular */
-    .circle { border-radius: 50%; }
+    .map1Shape:hover {
+      transform: scale(1.1);
+    }
 
-    /* Example positions for 12 shapes */
-    #shape1  { top:  50px; left:  50px;  }
-    #shape2  { top:  50px; right: 50px; }
-    #shape3  { bottom: 50px; left: 50px; }
-    #shape4  { bottom: 50px; right: 50px; }
+    /* Distinct shapes/sizes */
+    .square  { width: 60px;  height: 60px;  border-radius: 4px; }
+    .circle  { width: 60px;  height: 60px;  border-radius: 50%; }
+    .bigCircle { width: 80px; height: 80px; border-radius: 50%; }
+    .smallCircle { width: 40px; height: 40px; border-radius: 50%; }
+
+    /* Example positions for shapes */
+    #shape1  { top:  50px; left:  50px; }
+    #shape2  { top:  50px; right: 70px; }
+    #shape3  { bottom: 70px; left: 50px; }
+    #shape4  { bottom: 70px; right: 70px; }
     #shape5  { top:  200px; left: 30%; }
     #shape6  { top:  200px; left: 60%; }
     #shape7  { top:  300px; left: 20%; }
@@ -331,38 +400,59 @@
     #shape10 { bottom: 150px; left: 25%; }
     #shape11 { bottom: 150px; left: 50%; }
     #shape12 { bottom: 150px; left: 75%; }
+    #shape13 { top: 120px; left: 40%; }
+    #shape14 { top: 120px; left: 55%; }
+    #shape15 { top: 400px; left: 60%; }
 
     /********************************************************
       IN-GAME HUD
     *********************************************************/
+    /* We'll show a big timer to the left, question text to the right */
     #inGameHUD {
       position: absolute; 
       top: 30px; 
-      left: 50%; 
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.6); 
-      padding: 10px 15px; 
-      border-radius: 8px;
-      text-align: center;
-      min-width: 250px;
-    }
-    #commandText {
-      font-size: 1.2rem; 
-      margin-bottom: 10px;
-      line-height: 1.4em;
+      width: 100%;
+      display: flex; 
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      pointer-events: none; /* doesn't block shape clicks */
+      gap: 20px;
     }
     #timeLeft {
-      font-size: 1rem; 
-      margin-bottom: 10px;
+      font-size: 2rem; 
+      font-weight: bold;
+      background: rgba(0,0,0,0.5);
+      padding: 10px 15px; 
+      border-radius: 8px;
+      pointer-events: none;
+      min-width: 120px;
+      text-align: center;
     }
-    #scoreHUD {
-      margin-top: 5px; 
-      font-size: 0.95rem; 
+    #commandText {
+      font-size: 1.5rem;
       line-height: 1.4em;
+      background: rgba(0,0,0,0.5);
+      padding: 10px 15px; 
+      border-radius: 8px;
+      pointer-events: none;
+      max-width: 600px;
     }
-    #scoreHUD .label {
-      font-weight: bold; 
-      margin-right: 5px;
+
+    /* Middle-left stats panel during match */
+    #scoreHUD {
+      position: absolute; 
+      top: 200px; 
+      left: 10px;
+      background: rgba(0,0,0,0.5); 
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      pointer-events: none;
+      line-height: 1.6em;
+    }
+    .label {
+      font-weight: bold;
     }
 
     /********************************************************
@@ -385,33 +475,48 @@
       background: #222; 
       padding: 30px; 
       border-radius: 10px; 
-      width: 320px;
+      width: 350px;
     }
     #gameOverBox h2 { margin-bottom: 15px; }
     #gameOverBox button {
       background: #444; 
       color: #fff; 
       border: none;
-      padding: 10px 20px; 
+      padding: 12px 20px; 
       cursor: pointer; 
-      border-radius: 6px;
+      border-radius: 8px;
       margin: 10px;
+      font-size: 1rem;
+      transition: transform 0.2s, background 0.2s;
     }
-    #gameOverBox button:hover { background: #666; }
+    #gameOverBox button:hover {
+      background: #666;
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
+  <!-- SOUND EFFECTS -->
+  <audio id="sndLoseLife" preload="auto">
+    <source src="data:audio/mpeg;base64,//uQx..." type="audio/mpeg">
+  </audio>
+  <audio id="sndHardcoreSelect" preload="auto">
+    <source src="data:audio/mpeg;base64,//uQx..." type="audio/mpeg">
+  </audio>
+  <audio id="sndHighScore" preload="auto">
+    <source src="data:audio/mpeg;base64,//uQx..." type="audio/mpeg">
+  </audio>
 
   <!-- STATIC MENU (top-left) -->
   <div id="staticMenu">
-    <a href="https://sites.google.com/view/staticquasar931/gm3z" target="_blank">More Unblocked Games by Static</a>
+    <a href="https://sites.google.com/view/staticquasar931" target="_blank">Main Static Site</a>
     <button id="closeMenu">✖</button>
   </div>
 
   <!-- SETTINGS BUTTON (top-right) -->
   <button id="settingsButton">Settings</button>
 
-  <!-- SETTINGS OVERLAY -->
+  <!-- SETTINGS OVERLAY (3x bigger) -->
   <div id="settingsOverlay">
     <div id="settingsBox">
       <h3>Settings</h3>
@@ -422,14 +527,11 @@
         </label>
       </div>
       <div class="settingsRow">
-        <p>Color Examples:</p>
-        <p style="font-size:0.9rem; line-height:1.3em;">
-          <span style="color:red;">Red</span> /
-          <span style="color:green;">Green</span> /
-          <span style="color:blue;">Blue</span> /
-          <span style="color:orange;">Orange</span> /
-          <span style="color:yellow;">Yellow</span> /
-          <span style="color:purple;">Purple</span>
+        <p style="font-size:1.2rem;">
+          <strong>Color Remapping Example:</strong><br/>
+          <em>Red</em> ⇒ <em>cbm red</em><br/>
+          <em>Green</em> ⇒ <em>cbm green</em><br/>
+          <em>Blue</em> ⇒ <em>cbm blue</em> ... etc
         </p>
       </div>
       <div class="settingsRow">
@@ -437,7 +539,7 @@
         <input type="range" id="soundSlider" min="0" max="100" value="50" />
       </div>
       <div class="settingsRow">
-        <button id="shareButton">Share</button>
+        <button id="shareButton">Share This Game</button>
       </div>
       <div class="settingsRow">
         <button id="closeSettingsBtn">Close</button>
@@ -445,9 +547,9 @@
     </div>
   </div>
 
-  <!-- QR CODE (bottom-left) - links to your homepage -->
+  <!-- QR CODE (bottom-left) -->
   <div id="qrContainer">
-    <a href="https://sites.google.com/view/staticquasar931/gm3z" target="_blank">
+    <a href="https://sites.google.com/view/staticquasar931" target="_blank">
       <img 
         src="https://res.cloudinary.com/dcsrqennd/image/upload/v1733694622/frame_1_vmv9y3.png" 
         alt="QR Code to Static's Website" 
@@ -455,7 +557,7 @@
     </a>
   </div>
 
-  <!-- STATS (bottom-right) -->
+  <!-- GLOBAL STATS (bottom-right) -->
   <div id="statsContainer">
     <strong>Global Stats</strong><br/>
     Total Rounds Played: <span id="totalRoundsSpan">0</span><br/><br/>
@@ -483,7 +585,7 @@
     </div>
   </div>
 
-  <!-- DIFFICULTY MENU (appears after selecting Map 1) -->
+  <!-- DIFFICULTY MENU -->
   <div id="difficultyMenu">
     <div id="difficultyTitle">Choose Difficulty</div>
     <div id="difficultyNote">
@@ -498,7 +600,7 @@
     </div>
   </div>
 
-  <!-- RULES OVERLAY (map in background) -->
+  <!-- RULES OVERLAY -->
   <div id="rulesOverlay">
     <div id="rulesBox">
       <h2>How to Play "Static Says"</h2>
@@ -506,7 +608,7 @@
         1) If the command starts with <strong>“Static says...”</strong>, <em>perform</em> it.<br/>
         2) If it does NOT, <em>do nothing</em>.<br/>
         3) Each correct action = +1 point. Lose a life if you do it wrong.<br/>
-        4) Speed and lives depend on difficulty.
+        4) Speed and lives depend on difficulty and rounds in.
       </p>
       <p id="difficultyInfoText"></p>
       <button id="startGameBtn">Start Game</button>
@@ -515,34 +617,38 @@
 
   <!-- GAME AREA -->
   <div id="gameArea">
-
     <!-- MAP 1 -->
     <div id="map1Container">
-      <!-- 12 sample shapes with distinct text/positions -->
-      <div class="map1Shape" id="shape1">1</div>
-      <div class="map1Shape circle" id="shape2">2</div>
-      <div class="map1Shape" id="shape3">3</div>
-      <div class="map1Shape circle" id="shape4">4</div>
-      <div class="map1Shape" id="shape5">5</div>
-      <div class="map1Shape circle" id="shape6">6</div>
-      <div class="map1Shape" id="shape7">7</div>
-      <div class="map1Shape" id="shape8">8</div>
-      <div class="map1Shape" id="shape9">9</div>
-      <div class="map1Shape circle" id="shape10">10</div>
-      <div class="map1Shape" id="shape11">11</div>
-      <div class="map1Shape" id="shape12">12</div>
+      <!-- 15 sample shapes: squares/circles, different sizes, some with numbers -->
+      <!-- We keep them grayscale; color is just referenced in text -->
+      <div class="map1Shape square"   id="shape1">1</div>
+      <div class="map1Shape circle"   id="shape2">2</div>
+      <div class="map1Shape square"   id="shape3"></div>
+      <div class="map1Shape circle"   id="shape4">4</div>
+      <div class="map1Shape square"   id="shape5">5</div>
+      <div class="map1Shape circle"   id="shape6"></div>
+      <div class="map1Shape square"   id="shape7">7</div>
+      <div class="map1Shape square"   id="shape8">8</div>
+      <div class="map1Shape square"   id="shape9"></div>
+      <div class="map1Shape bigCircle"   id="shape10">10</div>
+      <div class="map1Shape square"   id="shape11"></div>
+      <div class="map1Shape smallCircle" id="shape12">12</div>
+      <div class="map1Shape smallCircle" id="shape13"></div>
+      <div class="map1Shape bigCircle"   id="shape14"></div>
+      <div class="map1Shape circle"      id="shape15">15</div>
     </div>
 
-    <!-- In-Game HUD (Command, Timer, Score) -->
+    <!-- HUD -->
     <div id="inGameHUD">
+      <div id="timeLeft">0s</div>
       <div id="commandText"></div>
-      <div id="timeLeft"></div>
-      <div id="scoreHUD">
-        <div><span class="label">Difficulty:</span> <span id="currentDifficulty">-</span></div>
-        <div><span class="label">Lives:</span> <span id="livesCount">0</span></div>
-        <div><span class="label">Score:</span> <span id="roundScore">0</span></div>
-        <div><span class="label">High:</span> <span id="currHighScore">0</span></div>
-      </div>
+    </div>
+    <!-- Middle-left stats in-game -->
+    <div id="scoreHUD">
+      <div><span class="label">Difficulty:</span> <span id="currentDifficulty">-</span></div>
+      <div><span class="label">Lives:</span> <span id="livesCount">0</span></div>
+      <div><span class="label">Score:</span> <span id="roundScore">0</span></div>
+      <div><span class="label">High:</span> <span id="currHighScore">0</span></div>
     </div>
   </div>
 
@@ -600,7 +706,6 @@
   const hardcoreBtn         = document.getElementById('hardcoreBtn');
   // Rules overlay
   const rulesOverlay        = document.getElementById('rulesOverlay');
-  const rulesBox            = document.getElementById('rulesBox');
   const startGameBtn        = document.getElementById('startGameBtn');
   const difficultyInfoText  = document.getElementById('difficultyInfoText');
   // Game area
@@ -612,6 +717,7 @@
   const roundScoreEl        = document.getElementById('roundScore');
   const currHighScoreEl     = document.getElementById('currHighScore');
   const currentDifficultyEl = document.getElementById('currentDifficulty');
+  const scoreHUD            = document.getElementById('scoreHUD');
   // Game over
   const gameOverOverlay     = document.getElementById('gameOverOverlay');
   const gameOverMsg         = document.getElementById('gameOverMsg');
@@ -626,6 +732,13 @@
   const colorBlindToggle    = document.getElementById('colorBlindToggle');
   const soundSlider         = document.getElementById('soundSlider');
   const shareButton         = document.getElementById('shareButton');
+  // Audio
+  const sndLoseLife         = document.getElementById('sndLoseLife');
+  const sndHardcoreSelect   = document.getElementById('sndHardcoreSelect');
+  const sndHighScore        = document.getElementById('sndHighScore');
+
+  // For demonstration, these base64-encoded <audio> tags are placeholders. 
+  // You can replace the src with real .mp3 URLs.
 
   // Static Menu
   document.getElementById('closeMenu').addEventListener('click', () => {
@@ -639,8 +752,44 @@
   closeSettingsBtn.addEventListener('click', () => {
     settingsOverlay.style.display = 'none';
   });
-  shareButton.addEventListener('click', () => {
-    alert("Share feature not implemented – place your link or social share code here!");
+
+  // Manage volume
+  soundSlider.addEventListener('input', () => {
+    let vol = soundSlider.value / 100;
+    sndLoseLife.volume = vol;
+    sndHardcoreSelect.volume = vol;
+    sndHighScore.volume = vol;
+  });
+  // Initialize volume
+  sndLoseLife.volume = 0.5;
+  sndHardcoreSelect.volume = 0.5;
+  sndHighScore.volume = 0.5;
+
+  // Share button
+  shareButton.addEventListener('click', async () => {
+    const shareUrl = "https://sites.google.com/view/staticquasar931/static-gmes/static-says";
+    const shareText = "Check out this awesome game - Static Says!";
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Static Says",
+          text: shareText,
+          url: shareUrl
+        });
+        alert("Thanks for sharing!");
+      } catch (err) {
+        console.log("Share canceled or failed:", err);
+      }
+    } else {
+      // fallback: copy link to clipboard
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Game link copied to clipboard!\n" + shareUrl);
+      } catch {
+        alert("Unable to share automatically. URL:\n" + shareUrl);
+      }
+    }
   });
 
   /********************************************************
@@ -652,12 +801,8 @@
     mainMenu.style.display = 'none';
     difficultyMenu.style.display = 'flex';
   });
-  map2Btn.addEventListener('click', () => {
-    // no-op for disabled
-  });
-  map3Btn.addEventListener('click', () => {
-    // no-op for disabled
-  });
+  map2Btn.addEventListener('click', () => { /* no-op disabled */ });
+  map3Btn.addEventListener('click', () => { /* no-op disabled */ });
 
   /********************************************************
     DIFFICULTY SELECT
@@ -667,40 +812,46 @@
   let roundScore = 0;
   let currentHighScore = 0;
 
-  // Adjust speed/time limit by difficulty
-  let baseTimeLimit = 3000; // default
+  // We TRIPLE the time we had before.
+  // Previous "easy" ~ 3000ms, "medium" ~ 2200ms, "hardcore" ~ 1500ms
+  // Now => easy ~ 9000ms, medium ~ 6600ms, hardcore ~ 4500ms
+  let baseTimeLimit = 9000; 
 
   easyBtn.addEventListener('click', () => {
     currentDifficulty = 'easy';
     lives = 4;
-    baseTimeLimit = 3000; // slower
+    baseTimeLimit = 9000;
     currentHighScore = gameStats.easy.highScore;
-    showRulesOverlay("Easy Mode: 4 lives, slower speed. Best for beginners!");
+    difficultyInfoText.textContent = "Easy Mode: 4 lives, slower speed. Great for beginners!";
+    showRulesOverlay();
   });
   mediumBtn.addEventListener('click', () => {
     currentDifficulty = 'medium';
     lives = 2;
-    baseTimeLimit = 2200; // medium
+    baseTimeLimit = 6600;
     currentHighScore = gameStats.medium.highScore;
-    showRulesOverlay("Medium Mode: 2 lives, moderate speed. A good challenge!");
+    difficultyInfoText.textContent = "Medium Mode: 2 lives, moderate speed. A good challenge!";
+    showRulesOverlay();
   });
   hardcoreBtn.addEventListener('click', () => {
+    // Play a small sfx for selecting hardcore
+    sndHardcoreSelect.currentTime = 0;
+    sndHardcoreSelect.play().catch(e=>{});
+
     currentDifficulty = 'hardcore';
     lives = 1;
-    baseTimeLimit = 1500; // fastest
+    baseTimeLimit = 4500;
     currentHighScore = gameStats.hardcore.highScore;
-    showRulesOverlay("Hardcore Mode: 1 life, fastest speed. Good luck!");
+    difficultyInfoText.textContent = "Hardcore Mode: 1 life, fastest speed. Good luck!";
+    showRulesOverlay();
   });
 
-  function showRulesOverlay(msg) {
-    // Show the map background (so user can see it behind the rules)
+  function showRulesOverlay() {
     difficultyMenu.style.display = 'none';
     gameArea.style.display = 'block';
     rulesOverlay.style.display = 'flex';
-    difficultyInfoText.textContent = msg;
   }
 
-  // Start the game after rules
   startGameBtn.addEventListener('click', () => {
     rulesOverlay.style.display = 'none';
     startTheGame();
@@ -708,111 +859,54 @@
 
   /********************************************************
     SHAPE DEFINITIONS (Map 1)
-    Each shape: 
-      id -> DOM ID
-      color -> color name
-      shapeType -> "square" or "circle"
-      positionDesc -> "top-left corner" etc
-      hasNumber -> optional number
-      name -> text label for referencing in commands
+    We'll keep color references just in data for the instructions,
+    but visually they're grayscale. Some have numbers, some not.
   *********************************************************/
-  // We'll define 12 shapes with unique combos
-  const map1Shapes = [
+  const shapeDefinitions = [
     {
-      id: "shape1",
-      color: "red",
-      shapeType: "square",
-      positionDesc: "top-left corner",
-      hasNumber: 1,
-      name: "red square with the number 1 in the top-left corner"
+      id: "shape1", color: "red",    shapeType: "square",   positionDesc: "top-left corner",   hasNumber: "1"
     },
     {
-      id: "shape2",
-      color: "blue",
-      shapeType: "circle",
-      positionDesc: "top-right corner",
-      hasNumber: 2,
-      name: "blue circle with the number 2 in the top-right corner"
+      id: "shape2", color: "blue",   shapeType: "circle",   positionDesc: "top-right corner",  hasNumber: "2"
     },
     {
-      id: "shape3",
-      color: "green",
-      shapeType: "square",
-      positionDesc: "bottom-left corner",
-      hasNumber: 3,
-      name: "green square with the number 3 in the bottom-left corner"
+      id: "shape3", color: "green",  shapeType: "square",   positionDesc: "bottom-left corner"
     },
     {
-      id: "shape4",
-      color: "orange",
-      shapeType: "circle",
-      positionDesc: "bottom-right corner",
-      hasNumber: 4,
-      name: "orange circle with the number 4 in the bottom-right corner"
+      id: "shape4", color: "orange", shapeType: "circle",   positionDesc: "bottom-right corner", hasNumber: "4"
     },
     {
-      id: "shape5",
-      color: "yellow",
-      shapeType: "square",
-      positionDesc: "upper-left area",
-      hasNumber: 5,
-      name: "yellow square with the number 5 in the upper-left area"
+      id: "shape5", color: "yellow", shapeType: "square",   positionDesc: "upper-left area",    hasNumber: "5"
     },
     {
-      id: "shape6",
-      color: "purple",
-      shapeType: "circle",
-      positionDesc: "upper-right area",
-      hasNumber: 6,
-      name: "purple circle with the number 6 in the upper-right area"
+      id: "shape6", color: "purple", shapeType: "circle",   positionDesc: "upper-right area"
     },
     {
-      id: "shape7",
-      color: "red",
-      shapeType: "square",
-      positionDesc: "middle-left area",
-      hasNumber: 7,
-      name: "red square with the number 7 in the middle-left area"
+      id: "shape7", color: "red",    shapeType: "square",   positionDesc: "middle-left area",   hasNumber: "7"
     },
     {
-      id: "shape8",
-      color: "green",
-      shapeType: "square",
-      positionDesc: "center area",
-      hasNumber: 8,
-      name: "green square with the number 8 in the center area"
+      id: "shape8", color: "blue",   shapeType: "square",   positionDesc: "center area",        hasNumber: "8"
     },
     {
-      id: "shape9",
-      color: "blue",
-      shapeType: "square",
-      positionDesc: "middle-right area",
-      hasNumber: 9,
-      name: "blue square with the number 9 in the middle-right area"
+      id: "shape9", color: "green",  shapeType: "square",   positionDesc: "middle-right area"
     },
     {
-      id: "shape10",
-      color: "orange",
-      shapeType: "circle",
-      positionDesc: "lower-left area",
-      hasNumber: 10,
-      name: "orange circle with the number 10 in the lower-left area"
+      id: "shape10", color: "orange", shapeType: "bigCircle", positionDesc: "lower-left area",  hasNumber: "10"
     },
     {
-      id: "shape11",
-      color: "purple",
-      shapeType: "square",
-      positionDesc: "lower-middle area",
-      hasNumber: 11,
-      name: "purple square with the number 11 in the lower-middle area"
+      id: "shape11", color: "purple", shapeType: "square",    positionDesc: "lower-middle area"
     },
     {
-      id: "shape12",
-      color: "yellow",
-      shapeType: "square",
-      positionDesc: "lower-right area",
-      hasNumber: 12,
-      name: "yellow square with the number 12 in the lower-right area"
+      id: "shape12", color: "yellow", shapeType: "smallCircle",positionDesc: "lower-right area", hasNumber: "12"
+    },
+    {
+      id: "shape13", color: "red",    shapeType: "smallCircle",positionDesc: "somewhere near top center"
+    },
+    {
+      id: "shape14", color: "green",  shapeType: "bigCircle",  positionDesc: "somewhere near top-right area"
+    },
+    {
+      id: "shape15", color: "blue",   shapeType: "circle",     positionDesc: "somewhere middle-top", hasNumber: "15"
     }
   ];
 
@@ -821,45 +915,43 @@
   *********************************************************/
   let roundActive = false;
   let timerID = null;
-  let timeLimit = baseTimeLimit;
   let countdownInterval = null;
   let currentRound = 0;
+  let timeLimit = 9000; // will adjust by difficulty
 
   function startTheGame() {
-    // Hide QR code and Stats for immersion
+    // Hide QR code & Stats
     qrContainer.style.display = 'none';
     statsContainer.style.display = 'none';
 
     roundScore = 0;
     currentRound = 0;
     timeLimit = baseTimeLimit;
-    
+
     currentDifficultyEl.textContent = currentDifficulty.toUpperCase();
     livesCountEl.textContent = lives;
     roundScoreEl.textContent = roundScore;
     currHighScoreEl.textContent = currentHighScore;
-    inGameHUD.style.display = 'block';
+
+    scoreHUD.style.display = 'block'; 
+    inGameHUD.style.display = 'flex';
 
     nextRound();
   }
 
   /********************************************************
-    GAME ROUND
+    NEXT ROUND
   *********************************************************/
   function nextRound() {
     roundActive = true;
     currentRound++;
 
-    // Increase difficulty with rounds: reduce time limit a bit each round
-    // but keep a floor so it doesn't get too impossible
-    timeLimit = Math.max(baseTimeLimit - (currentRound * 100), 700);
+    // Increase difficulty with rounds (time gets shorter each round)
+    // but not too short
+    timeLimit = Math.max(baseTimeLimit - (currentRound * 200), 1500);
 
     // Decide if "Static says" or not (70% chance = "Static says")
     let staticSays = (Math.random() < 0.7);
-
-    // For easier early rounds, we might reduce the shape pool in the first few rounds
-    let shapePoolSize = Math.min(4 + currentRound, map1Shapes.length);
-    shapePoolSize = Math.min(shapePoolSize, map1Shapes.length);
 
     // Possibly multi-step commands for higher rounds
     let multiStep = 1;
@@ -867,83 +959,73 @@
       multiStep = 2; // two steps
     }
 
-    // Gather random shapes
+    // We'll pick from the entire shape set. 
+    // If you want to keep early rounds simpler, you can limit to fewer shapes initially.
     let chosenShapes = [];
     for (let i = 0; i < multiStep; i++) {
-      let randomShape = map1Shapes[Math.floor(Math.random() * shapePoolSize)];
+      let randomShape = shapeDefinitions[Math.floor(Math.random() * shapeDefinitions.length)];
       chosenShapes.push(randomShape);
     }
 
     // Build the instruction text
-    let instructionText = "";
-    if (staticSays) {
-      instructionText += "Static says: click on ";
-    } else {
-      instructionText += "Click on ";
-    }
+    let instructionText = staticSays ? "Static says: click on " : "Click on ";
 
-    // If color-blind mode is on, we add abbreviations like (R), (G), etc.
+    // Color-blind mode check
     let isColorBlind = colorBlindToggle.checked;
 
-    // Combine shapes into a single text
     chosenShapes.forEach((shp, idx) => {
       let colorLabel = shp.color;
-      let colorAbbr = "";
       if (isColorBlind) {
-        // Simple abbreviations
-        if (shp.color.toLowerCase() === 'red') colorAbbr = " (R)";
-        else if (shp.color.toLowerCase() === 'green') colorAbbr = " (G)";
-        else if (shp.color.toLowerCase() === 'blue') colorAbbr = " (B)";
-        else if (shp.color.toLowerCase() === 'orange') colorAbbr = " (O)";
-        else if (shp.color.toLowerCase() === 'purple') colorAbbr = " (P)";
-        else if (shp.color.toLowerCase() === 'yellow') colorAbbr = " (Y)";
+        // Simple example: "red" => "cbm red"
+        colorLabel = "cbm " + shp.color;
       }
-      let nameSegment = `${shp.color}${colorAbbr} ${shp.shapeType} with the number ${shp.hasNumber} in the ${shp.positionDesc}`;
+      let desc = `${colorLabel} ${shp.shapeType}`;
+      if (shp.hasNumber) {
+        desc += ` with the number ${shp.hasNumber}`;
+      }
+      desc += ` in the ${shp.positionDesc}`;
       if (idx > 0) {
         instructionText += (idx === multiStep - 1) ? " then " : ", then ";
       }
-      instructionText += nameSegment;
+      instructionText += desc;
     });
 
     commandText.innerHTML = instructionText;
 
-    // Timer
+    // Setup timer
     let totalTimeSec = Math.ceil(timeLimit / 1000);
-    timeLeftEl.textContent = "Time left: " + totalTimeSec + "s";
+    timeLeftEl.textContent = totalTimeSec + "s";
 
-    // Start a countdown
     let timeRemaining = totalTimeSec;
     countdownInterval = setInterval(() => {
       timeRemaining--;
       if (timeRemaining <= 0) {
         clearInterval(countdownInterval);
       }
-      timeLeftEl.textContent = "Time left: " + Math.max(timeRemaining, 0) + "s";
+      timeLeftEl.textContent = Math.max(timeRemaining, 0) + "s";
     }, 1000);
 
-    // If user must do something but fails to do it in time => lose life
+    // If user must do something and fails => lose life
     timerID = setTimeout(() => {
       if (staticSays) {
-        // Player needed to click, but didn't => fail
+        // needed to click, but didn't => fail
         finalizeRound(false);
       } else {
-        // If "Static doesn't say," then doing nothing is correct => success
+        // correct to do nothing => success
         finalizeRound(true);
       }
     }, timeLimit);
 
-    // Attach shape click logic
-    // If "Static says," user must click the correct shape(s) in the right order
-    // For simplicity, let's say any out-of-order or wrong shape is immediate fail.
+    // If "Static says," user must click correct shapes in order
     if (staticSays) {
       let requiredClicks = chosenShapes.map(c => c.id);
       let clickIndex = 0;
+
       function shapeClickHandler(e) {
         if (!roundActive) return;
         const clickedId = e.target.id;
         if (clickedId === requiredClicks[clickIndex]) {
           clickIndex++;
-          // If we are done, success
           if (clickIndex >= requiredClicks.length) {
             finalizeRound(true);
           }
@@ -952,45 +1034,47 @@
           finalizeRound(false);
         }
       }
-      map1Shapes.forEach(s => {
+      shapeDefinitions.forEach(s => {
         let ref = document.getElementById(s.id);
         ref.addEventListener('click', shapeClickHandler);
       });
 
-      // Cleanup
       function finalizeRound(success) {
         roundActive = false;
+        cleanupListeners();
+        handleRoundEnd(success);
+      }
+      function cleanupListeners() {
         clearTimeout(timerID);
         clearInterval(countdownInterval);
-
-        // Remove listeners
-        map1Shapes.forEach(s => {
+        shapeDefinitions.forEach(s => {
           let ref = document.getElementById(s.id);
           ref.removeEventListener('click', shapeClickHandler);
         });
-        handleRoundEnd(success);
       }
     } else {
-      // "Static doesn't say," correct action is do nothing
-      // If user clicks anything => fail
+      // "Static doesn't say" => correct action is to do nothing
       function shapeClickHandler(e) {
         if (!roundActive) return;
-        finalizeRound(false);
+        finalizeRound(false); // user clicked => fail
       }
-      map1Shapes.forEach(s => {
+      shapeDefinitions.forEach(s => {
         let ref = document.getElementById(s.id);
         ref.addEventListener('click', shapeClickHandler);
       });
 
       function finalizeRound(success) {
         roundActive = false;
+        cleanupListeners();
+        handleRoundEnd(success);
+      }
+      function cleanupListeners() {
         clearTimeout(timerID);
         clearInterval(countdownInterval);
-        map1Shapes.forEach(s => {
+        shapeDefinitions.forEach(s => {
           let ref = document.getElementById(s.id);
           ref.removeEventListener('click', shapeClickHandler);
         });
-        handleRoundEnd(success);
       }
     }
   }
@@ -1000,46 +1084,57 @@
   *********************************************************/
   function handleRoundEnd(success) {
     if (success) {
-      // Award point only if success
       roundScore++;
       gameStats.totalRounds++;
       gameStats[currentDifficulty].roundsPlayed++;
     } else {
-      // Lost a life if we fail
+      // Lose life, play sound, screen flick
       lives--;
-      // No point for failing
+      flashScreenRed();
+      sndLoseLife.currentTime = 0;
+      sndLoseLife.play().catch(e=>{});
     }
     updateStatsUI();
     saveStatsToLocal();
+
+    // Update HUD
+    roundScoreEl.textContent = roundScore;
+    livesCountEl.textContent = lives;
 
     // Check if game over
     if (lives <= 0) {
       endGame();
     } else {
-      // Continue
-      roundScoreEl.textContent = roundScore;
-      livesCountEl.textContent = lives;
       nextRound();
     }
+  }
+
+  // Screen flick/shake on losing a life
+  function flashScreenRed() {
+    gameArea.classList.add('lifeLossFlash');
+    setTimeout(() => {
+      gameArea.classList.remove('lifeLossFlash');
+    }, 600);
   }
 
   /********************************************************
     END GAME
   *********************************************************/
   function endGame() {
-    // Stop everything
     roundActive = false;
     clearTimeout(timerID);
     clearInterval(countdownInterval);
 
-    // Update high score if needed
+    // If new high score
     if (roundScore > currentHighScore) {
       currentHighScore = roundScore;
       gameStats[currentDifficulty].highScore = roundScore;
       saveStatsToLocal();
+      // Play high score sound
+      sndHighScore.currentTime = 0;
+      sndHighScore.play().catch(e=>{});
     }
 
-    // Show game over overlay
     gameOverMsg.textContent = "Your Score: " + roundScore;
     gameOverOverlay.style.display = 'flex';
   }
