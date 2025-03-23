@@ -434,7 +434,7 @@
       height: 2px; top: 50%;
     }
 
-    /* SHAPES (some big or small). Additional shapes with color. */
+    /* SHAPES */
     .map1Shape {
       position: absolute;
       display: flex; 
@@ -457,7 +457,7 @@
     .bigCircle { width: 80px; height: 80px; border-radius: 50%; font-size:1.2rem;}
     .smallCircle { width: 40px; height: 40px; border-radius: 50%; font-size:0.8rem;}
 
-    /* EXAMPLE POSITIONS */
+    /* Some positions (unchanged from previous) */
     #shape1  { top: 80px; left: 50px;   background: red;       color: #fff; }
     #shape2  { top: 80px; right: 70px;  background: blue;      color: #fff; }
     #shape3  { bottom: 70px; left: 50px;  background: black;     color: #fff; }
@@ -473,7 +473,6 @@
     #shape13 { top: 120px; left: 40%;   background: black;    color: #fff; }
     #shape14 { top: 120px; left: 55%;   background: purple;   color: #fff; }
     #shape15 { top: 400px; left: 60%;   background: white;    color: #000; }
-    /* NEW ONES */
     #shape16 { top: 350px; left: 35%;   background: pink;     color: #000; }
     #shape17 { top: 100px; right: 20%;  background: red;      color: #fff; }
     #shape18 { bottom: 200px; left: 30%; background: orange;  color: #000; }
@@ -572,6 +571,11 @@
       cursor: pointer;
       margin-top: 20px;
       font-size: 1rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    #pauseEndGameBtn:hover {
+      background: #666;
+      transform: scale(1.05);
     }
     #doubleConfirmOverlay {
       position: absolute;
@@ -674,6 +678,17 @@
         <label for="soundSlider">Sound Volume:</label><br/>
         <input type="range" id="soundSlider" min="0" max="100" value="50" />
       </div>
+
+      <!-- FEEDBACK LINK -->
+      <div class="settingsRow">
+        <a 
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfFiegPH6GsWIWERzfbtptJW2GMk4exkrTQsdqlR2-2oj83zA/viewform?usp=sf_link" 
+          target="_blank"
+        >
+          Leave feedback via this Google Form
+        </a>
+      </div>
+
       <div class="settingsRow">
         <button id="openShareOverlayBtn">Share This Game</button>
       </div>
@@ -759,7 +774,8 @@
         2) If it does NOT, <em>do nothing</em>!<br/>
         3) Each correct action = +1 point. Lose a life if you do it wrong.<br/>
         4) Commands can be <em>click</em>, <em>hover</em>, or <em>cursor position</em> in a quadrant.<br/>
-        5) Press <strong>ESC</strong> or <strong>SPACE</strong>, or <strong>click</strong> to pause/unpause.<br/>
+        5) Press <strong>ESC</strong> or <strong>SPACE</strong> to pause/unpause.<br/>
+        (You can only click to <em>exit</em> pause, not enter it.)
       </p>
       <button id="startGameBtn">Start Game</button>
     </div>
@@ -863,13 +879,14 @@
   *********************************************************/
   const mainMenu             = document.getElementById('mainMenu');
   const map1Btn              = document.getElementById('map1Btn');
+  const map2Btn              = document.getElementById('map2Btn');
+  const map3Btn              = document.getElementById('map3Btn');
   const difficultyMenu       = document.getElementById('difficultyMenu');
   const easyBtn              = document.getElementById('easyBtn');
   const mediumBtn            = document.getElementById('mediumBtn');
   const hardcoreBtn          = document.getElementById('hardcoreBtn');
   const rulesOverlay         = document.getElementById('rulesOverlay');
   const startGameBtn         = document.getElementById('startGameBtn');
-
   const gameArea             = document.getElementById('gameArea');
   const inGameHUD            = document.getElementById('inGameHUD');
   const commandText          = document.getElementById('commandText');
@@ -879,11 +896,9 @@
   const currHighScoreEl      = document.getElementById('currHighScore');
   const currentDifficultyEl  = document.getElementById('currentDifficulty');
   const scoreHUD             = document.getElementById('scoreHUD');
-
   const gameOverOverlay      = document.getElementById('gameOverOverlay');
   const gameOverMsg          = document.getElementById('gameOverMsg');
   const menuReturnBtn        = document.getElementById('menuReturnBtn');
-
   const qrContainer          = document.getElementById('qrContainer');
   const statsContainer       = document.getElementById('statsContainer');
 
@@ -894,7 +909,6 @@
   const colorBlindToggle     = document.getElementById('colorBlindToggle');
   const soundSlider          = document.getElementById('soundSlider');
   const openShareOverlayBtn  = document.getElementById('openShareOverlayBtn');
-
   const shareOverlay         = document.getElementById('shareOverlay');
   const shareBox             = document.getElementById('shareBox');
   const shareTwitter         = document.getElementById('shareTwitter');
@@ -916,7 +930,7 @@
   const confirmEndYes        = document.getElementById('confirmEndYes');
   const confirmEndNo         = document.getElementById('confirmEndNo');
 
-  // Closing the static menu
+  // Close static menu
   document.getElementById('closeMenu').addEventListener('click', () => {
     document.getElementById('staticMenu').style.display = 'none';
   });
@@ -935,7 +949,6 @@
   // SHARE
   const gameLink = "https://sites.google.com/view/staticquasar931/static-gmes/static-says";
   function getShareText() {
-    // We can incorporate user's best high score from any difficulty
     let bestHigh = Math.max(
       gameStats.easy.highScore,
       gameStats.medium.highScore,
@@ -943,7 +956,6 @@
     );
     return `Try to beat my high score of ${bestHigh} in Static Says!`;
   }
-
   shareTwitter.href  = `https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText())}&url=${encodeURIComponent(gameLink)}`;
   shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(gameLink)}&quote=${encodeURIComponent(getShareText())}`;
   shareReddit.href   = `https://reddit.com/submit?url=${encodeURIComponent(gameLink)}&title=${encodeURIComponent(getShareText())}`;
@@ -956,13 +968,10 @@
   closeShareBtn.addEventListener('click', () => {
     shareOverlay.style.display = 'none';
   });
-
   openShareOverlayBtn.addEventListener('click', () => {
     settingsOverlay.style.display = 'none';
     shareOverlay.style.display = 'flex';
   });
-
-  // Clicking the stats container also opens share
   statsContainer.addEventListener('click', () => {
     shareOverlay.style.display = 'flex';
   });
@@ -970,8 +979,8 @@
   // Overlays: close on outside click
   function clickOutsideToClose(overlay, content) {
     overlay.addEventListener('click', (e) => {
-      if(e.target === overlay) {
-        overlay.style.display = 'none';
+      if(e.target===overlay) {
+        overlay.style.display='none';
       }
     });
   }
@@ -983,6 +992,8 @@
     mainMenu.style.display = 'none';
     difficultyMenu.style.display = 'flex';
   });
+  map2Btn.addEventListener('click', ()=>{});
+  map3Btn.addEventListener('click', ()=>{});
 
   // DIFFICULTY
   let currentDifficulty = '';
@@ -1005,8 +1016,7 @@
     showRulesOverlay("Medium Mode");
   });
   hardcoreBtn.addEventListener('click', () => {
-    sndHardcoreSelect.currentTime = 0;
-    sndHardcoreSelect.play().catch(()=>{});
+    sndHardcoreSelect.currentTime=0; sndHardcoreSelect.play().catch(()=>{});
     currentDifficulty = 'hardcore';
     lives = 1;
     baseTimeLimit = 4500;
@@ -1019,186 +1029,143 @@
     gameArea.style.display = 'block';
     rulesOverlay.style.display = 'flex';
   }
-
-  // RULES
-  startGameBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    startGame();
-    rulesOverlay.style.display = 'none';
-  });
-  rulesOverlay.addEventListener('click', (e) => {
-    // close if clicked outside box
-    if(e.target === rulesOverlay) {
-      rulesOverlay.style.display = 'none';
+  rulesOverlay.addEventListener('click', (e)=>{
+    if(e.target===rulesOverlay) {
+      rulesOverlay.style.display='none';
     }
   });
+  startGameBtn.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    startGame();
+    rulesOverlay.style.display='none';
+  });
 
-  // GAME VARIABLES
-  let baseTimeLimit = 9000; 
-  let roundActive = false;
-  let paused = false;
-  let timerID = null;
-  let countdownInterval = null;
-  let currentRound = 0;
-  let timeLimit = 9000;
+  // GAME VARS
+  let baseTimeLimit=9000; 
+  let roundActive=false;
+  let paused=false;
+  let timerID=null;
+  let countdownInterval=null;
+  let currentRound=0;
+  let timeLimit=9000;
 
-  // SHAPES
-  const shapeDefinitions = [
-    { id: "shape1",  color: "red",     shapeType: "square",   hasNumber: "1",    locPhrase: "top-left corner" },
-    { id: "shape2",  color: "blue",    shapeType: "circle",   hasNumber: "2" },
-    { id: "shape3",  color: "black",   shapeType: "square",   hasNumber: "3" },
-    { id: "shape4",  color: "orange",  shapeType: "circle",   hasNumber: "4" },
-    { id: "shape5",  color: "pink",    shapeType: "square",   hasNumber: "5" },
-    { id: "shape6",  color: "purple",  shapeType: "circle",   hasNumber: "6" },
-    { id: "shape7",  color: "white",   shapeType: "square",   hasNumber: "7" },
-    { id: "shape8",  color: "yellow",  shapeType: "square",   hasNumber: "8" },
-    { id: "shape9",  color: "black",   shapeType: "circle",   hasNumber: "9" },
-    { id: "shape10", color: "red",     shapeType: "bigCircle",hasNumber: "10" },
-    { id: "shape11", color: "pink",    shapeType: "circle",   hasNumber: "11" },
-    { id: "shape12", color: "white",   shapeType: "smallCircle", hasNumber: "12" },
-    { id: "shape13", color: "black",   shapeType: "smallCircle", hasNumber: "13" },
-    { id: "shape14", color: "purple",  shapeType: "bigCircle",   hasNumber: "14" },
-    { id: "shape15", color: "white",   shapeType: "square",   hasNumber: "15" },
-    { id: "shape16", color: "pink",    shapeType: "square",   hasNumber: "16" },
-    { id: "shape17", color: "red",     shapeType: "circle",   hasNumber: "17" },
-    { id: "shape18", color: "orange",  shapeType: "circle",   hasNumber: "18" },
-    { id: "shape19", color: "blue",    shapeType: "circle",   hasNumber: "19" },
-    { id: "shape20", color: "black",   shapeType: "square",   hasNumber: "20" },
+  // SHAPE DEFINITIONS
+  const shapeDefinitions=[
+    { id:"shape1",  color:"red",     shapeType:"square", hasNumber:"1",    locPhrase:"top-left corner" },
+    { id:"shape2",  color:"blue",    shapeType:"circle", hasNumber:"2" },
+    { id:"shape3",  color:"black",   shapeType:"square", hasNumber:"3" },
+    { id:"shape4",  color:"orange",  shapeType:"circle", hasNumber:"4" },
+    { id:"shape5",  color:"pink",    shapeType:"square", hasNumber:"5" },
+    { id:"shape6",  color:"purple",  shapeType:"circle", hasNumber:"6" },
+    { id:"shape7",  color:"white",   shapeType:"square", hasNumber:"7" },
+    { id:"shape8",  color:"yellow",  shapeType:"square", hasNumber:"8" },
+    { id:"shape9",  color:"black",   shapeType:"circle", hasNumber:"9" },
+    { id:"shape10", color:"red",     shapeType:"bigCircle", hasNumber:"10" },
+    { id:"shape11", color:"pink",    shapeType:"circle",   hasNumber:"11" },
+    { id:"shape12", color:"white",   shapeType:"smallCircle", hasNumber:"12" },
+    { id:"shape13", color:"black",   shapeType:"smallCircle", hasNumber:"13" },
+    { id:"shape14", color:"purple",  shapeType:"bigCircle",   hasNumber:"14" },
+    { id:"shape15", color:"white",   shapeType:"square",      hasNumber:"15" },
+    { id:"shape16", color:"pink",    shapeType:"square",      hasNumber:"16" },
+    { id:"shape17", color:"red",     shapeType:"circle",      hasNumber:"17" },
+    { id:"shape18", color:"orange",  shapeType:"circle",      hasNumber:"18" },
+    { id:"shape19", color:"blue",    shapeType:"circle",      hasNumber:"19" },
+    { id:"shape20", color:"black",   shapeType:"square",      hasNumber:"20" },
   ];
 
-  // START GAME
-  function startGame() {
-    qrContainer.style.display = 'none';
-    statsContainer.style.display = 'none';
+  /********************************************************
+    START GAME
+  *********************************************************/
+  function startGame(){
+    qrContainer.style.display='none';
+    statsContainer.style.display='none';
+    roundScore=0;
+    currentRound=0;
+    timeLimit=baseTimeLimit;
+    paused=false;
 
-    roundScore = 0;
-    currentRound = 0;
-    timeLimit = baseTimeLimit;
-    paused = false;
+    currentDifficultyEl.textContent=currentDifficulty.toUpperCase();
+    livesCountEl.textContent=lives;
+    roundScoreEl.textContent=roundScore;
+    currHighScoreEl.textContent=currentHighScore;
 
-    currentDifficultyEl.textContent = currentDifficulty.toUpperCase();
-    livesCountEl.textContent = lives;
-    roundScoreEl.textContent = roundScore;
-    currHighScoreEl.textContent = currentHighScore;
+    scoreHUD.style.display='block';
+    inGameHUD.style.display='flex';
 
-    scoreHUD.style.display = 'block'; 
-    inGameHUD.style.display = 'flex';
     nextRound();
   }
 
-  // NEXT ROUND
-  function nextRound() {
-    roundActive = true;
+  /********************************************************
+    NEXT ROUND
+  *********************************************************/
+  function nextRound(){
+    roundActive=true;
     currentRound++;
-    timeLimit = Math.max(baseTimeLimit - (currentRound * 200), 1500);
+    timeLimit=Math.max(baseTimeLimit-(currentRound*200),1500);
 
-    // 70% chance "Static says"
-    let staticSays = (Math.random() < 0.7);
-
-    // Command type: "click", "hover", or "cursor quadrant"
-    // Weighted: let's do ~10% quadrant command, ~20% hover, ~70% click overall
-    // after round 2
-    let possibilities = ["click","click","click","hover","click","quadrant"];
-    let commandType = possibilities[Math.floor(Math.random()*possibilities.length)];
-    if (currentRound < 2 && commandType !== "click") {
-      commandType = "click"; // early rounds simpler
+    let staticSays=(Math.random()<0.7);
+    // Weighted commands
+    let possibilities=["click","click","click","hover","click","quadrant"];
+    let commandType=possibilities[Math.floor(Math.random()*possibilities.length)];
+    if(currentRound<2 && commandType!=="click"){ 
+      commandType="click"; 
     }
 
-    // Possibly multi-step if click
-    let multiStep = 1;
-    if (commandType === "click" && currentRound >= 5 && Math.random()<0.4) {
-      multiStep = 2;
-    }
+    let multiStep=1;
+    if(commandType==="click" && currentRound>=5 && Math.random()<0.4) multiStep=2;
 
-    let chosenShapes = [];
-    for (let i=0; i<multiStep; i++){
-      let s = shapeDefinitions[Math.floor(Math.random()*shapeDefinitions.length)];
+    let chosenShapes=[];
+    for(let i=0; i<multiStep; i++){
+      let s=shapeDefinitions[Math.floor(Math.random()*shapeDefinitions.length)];
       chosenShapes.push(s);
     }
 
-    let finalCommandText = staticSays ? "Static says: " : "";
+    let finalCommandText= staticSays? "Static says: ":"";
 
-    // If quadrant:
-    if (commandType === "quadrant") {
-      // e.g. "keep your cursor in the bottom-left corner"
-      // or "have your cursor in the top-right quadrant"
-      // We'll randomly pick one of the four quadrants
-      let quads = ["top-left","top-right","bottom-left","bottom-right"];
-      let pickQuad = quads[Math.floor(Math.random()*4)];
-      finalCommandText += `keep your cursor in the ${pickQuad} quadrant`;
-      // We'll check mouse position at the end.
-      let requiredQuad = pickQuad;
+    if(commandType==="quadrant"){
+      // Quadrant command
+      let quads=["top-left","top-right","bottom-left","bottom-right"];
+      let pickQuad= quads[Math.floor(Math.random()*4)];
+      finalCommandText+=`keep your cursor in the ${pickQuad} quadrant`;
 
-      // Set up the timer
-      let totalSec = Math.ceil(timeLimit/1000);
-      timeLeftEl.textContent = totalSec+"s";
-      let timeRem = totalSec;
-      countdownInterval = setInterval(() => {
-        if(!paused){
-          timeRem--;
-          if(timeRem<=0){ timeRem=0; clearInterval(countdownInterval);}
-          timeLeftEl.textContent = timeRem+"s";
-        }
-      },1000);
+      let requiredQuad=pickQuad;
+      startTimer();
 
-      timerID = setTimeout(()=>{
+      timerID=setTimeout(()=>{
         if(!roundActive)return;
-        // Did user do it or not?
-        // If static says => user must be in that quadrant
-        // If doesn't => user must NOT be in that quadrant
-        let userQuad = getMouseQuadrant();
-        if(staticSays) {
+        let userQuad=getMouseQuadrant();
+        if(staticSays){
           if(userQuad===requiredQuad) finalizeRound(true);
           else finalizeRound(false);
         } else {
           if(userQuad===requiredQuad) finalizeRound(false);
           else finalizeRound(true);
         }
-      }, timeLimit);
+      },timeLimit);
 
-    } else if (commandType === "hover") {
-      // single step "hover over [X shape]"
-      let shapeObj = chosenShapes[0];
-      let text = "hover over the ";
-      text += shapeObjText(shapeObj);
-      finalCommandText += text;
-      // We'll do the same logic as before for "hover" commands
-      // If staticSays => must hover. If not => must not hover.
-      let requiredId = shapeObj.id;
+    } else if(commandType==="hover"){
+      // Single-step hover
+      let shapeObj=chosenShapes[0];
+      finalCommandText+=( `hover over the ${shapeObjText(shapeObj)}` );
+      let requiredId=shapeObj.id;
+      startTimer();
 
-      // Timer
-      let tSec = Math.ceil(timeLimit/1000);
-      timeLeftEl.textContent = tSec+"s";
-      let tRem = tSec;
-      countdownInterval = setInterval(() => {
-        if(!paused){
-          tRem--;
-          if(tRem<=0){ tRem=0; clearInterval(countdownInterval);}
-          timeLeftEl.textContent = tRem+"s";
-        }
-      },1000);
-
-      timerID = setTimeout(()=>{
+      timerID=setTimeout(()=>{
         if(!roundActive)return;
-        // If staticSays => user needed to hover
-        // If doesn't => user needed not to hover
-        finalizeRound(!staticSays);
-      }, timeLimit);
+        if(staticSays) finalizeRound(false);
+        else finalizeRound(true);
+      },timeLimit);
 
-      function mouseOverHandler(e) {
-        if(!roundActive||paused) return;
-        if(e.target.id===requiredId) {
-          // hovered correct
+      function mouseOverHandler(e){
+        if(!roundActive||paused)return;
+        if(e.target.id===requiredId){
           finalizeRound(staticSays?true:false);
-        } else {
-          // hovered a shape but not the required one => if "doesn't say" => fail?
-          if(!staticSays) {
-            finalizeRound(false);
-          }
+        } else if(!staticSays){
+          finalizeRound(false);
         }
       }
       shapeDefinitions.forEach(s=>{
-        let ref = document.getElementById(s.id);
+        let ref=document.getElementById(s.id);
         ref.addEventListener('mouseover',mouseOverHandler);
       });
 
@@ -1208,51 +1175,41 @@
         handleRoundEnd(success);
       }
       function cleanupListeners(){
-        clearTimeout(timerID); clearInterval(countdownInterval);
+        clearTimeout(timerID);
+        clearInterval(countdownInterval);
         shapeDefinitions.forEach(s=>{
-          let ref = document.getElementById(s.id);
+          let ref=document.getElementById(s.id);
           ref.removeEventListener('mouseover',mouseOverHandler);
         });
       }
 
     } else {
-      // default: "click"
+      // click
       // multi-step if staticSays
-      let textParts = [];
+      let textParts=[];
       chosenShapes.forEach((sh,i)=>{
-        let phrase = shapeObjText(sh);
-        if(i>0) {
+        let phrase=shapeObjText(sh);
+        if(i>0){
           textParts.push((i===multiStep-1)?"then "+phrase:", then "+phrase);
         } else {
           textParts.push(phrase);
         }
       });
-      finalCommandText += "click on "+ textParts.join(" ");
+      finalCommandText+= "click on "+ textParts.join(" ");
 
-      // Timer
-      let tSec = Math.ceil(timeLimit/1000);
-      timeLeftEl.textContent = tSec+"s";
-      let tRem = tSec;
-      countdownInterval = setInterval(() => {
-        if(!paused){
-          tRem--;
-          if(tRem<=0){tRem=0;clearInterval(countdownInterval);}
-          timeLeftEl.textContent = tRem+"s";
-        }
-      },1000);
-
-      timerID = setTimeout(()=>{
+      startTimer();
+      timerID=setTimeout(()=>{
         if(!roundActive)return;
-        if(staticSays) finalizeRound(false); 
+        if(staticSays) finalizeRound(false);
         else finalizeRound(true);
       }, timeLimit);
 
-      if(staticSays) {
-        let reqClicks = chosenShapes.map(c=>c.id);
+      if(staticSays){
+        let reqClicks= chosenShapes.map(c=>c.id);
         let cIndex=0;
         function clickHandler(e){
           if(!roundActive||paused)return;
-          let cid = e.target.id;
+          let cid=e.target.id;
           if(cid===reqClicks[cIndex]){
             cIndex++;
             if(cIndex>=reqClicks.length) finalizeRound(true);
@@ -1266,17 +1223,19 @@
         });
 
         function finalizeRound(success){
-          roundActive=false; 
+          roundActive=false;
           cleanup();
           handleRoundEnd(success);
         }
         function cleanup(){
-          clearTimeout(timerID);clearInterval(countdownInterval);
+          clearTimeout(timerID);
+          clearInterval(countdownInterval);
           shapeDefinitions.forEach(s=>{
             let ref=document.getElementById(s.id);
             ref.removeEventListener('click',clickHandler);
           });
         }
+
       } else {
         // "doesn't say" => any click => fail
         function clickHandler(e){
@@ -1293,7 +1252,8 @@
           handleRoundEnd(success);
         }
         function cleanup(){
-          clearTimeout(timerID);clearInterval(countdownInterval);
+          clearTimeout(timerID);
+          clearInterval(countdownInterval);
           shapeDefinitions.forEach(s=>{
             let ref=document.getElementById(s.id);
             ref.removeEventListener('click',clickHandler);
@@ -1302,61 +1262,74 @@
       }
     }
 
-    commandText.textContent = finalCommandText;
+    commandText.textContent=finalCommandText;
+
+    function startTimer(){
+      let tSec=Math.ceil(timeLimit/1000);
+      timeLeftEl.textContent=tSec+"s";
+      let tRem=tSec;
+      countdownInterval=setInterval(()=>{
+        if(!paused){
+          tRem--;
+          if(tRem<=0){
+            tRem=0;
+            clearInterval(countdownInterval);
+          }
+          timeLeftEl.textContent=tRem+"s";
+        }
+      },1000);
+    }
   }
 
-  // UTILITY: Describe shape object in text
-  function shapeObjText(sh) {
-    let cLabel = sh.color;
-    if(colorBlindToggle.checked) cLabel += " (CB)";
-    let shapeLabel = "";
+  // SHAPE TEXT
+  function shapeObjText(sh){
+    let cLabel=sh.color;
+    if(colorBlindToggle.checked) cLabel+=" (CB)";
+    let shapeLabel="";
     if(sh.shapeType==="bigCircle") shapeLabel="big circle";
     else if(sh.shapeType==="smallCircle") shapeLabel="small circle";
     else shapeLabel=sh.shapeType;
-
-    let phrase = cLabel+" "+shapeLabel;
-    if(sh.hasNumber && Math.random()>0.3) { 
-      // random chance to mention number
-      phrase += ` with the number ${sh.hasNumber}`;
+    let phrase=cLabel+" "+shapeLabel;
+    if(sh.hasNumber && Math.random()>0.3){
+      phrase+=` with the number ${sh.hasNumber}`;
     }
-    // random chance to mention location
-    if(sh.locPhrase && Math.random()>0.5) {
-      phrase += ` in the ${sh.locPhrase}`;
+    if(sh.locPhrase && Math.random()>0.5){
+      phrase+=` in the ${sh.locPhrase}`;
     }
     return phrase;
   }
 
-  // GET MOUSE QUADRANT
+  // MOUSE QUADRANT
   let mouseX=0, mouseY=0;
   function getMouseQuadrant(){
-    let rect = gameArea.getBoundingClientRect();
-    let midX = rect.width/2, midY=rect.height/2;
-    let xPos = mouseX - rect.left;
-    let yPos = mouseY - rect.top;
+    let rect=gameArea.getBoundingClientRect();
+    let midX=rect.width/2, midY=rect.height/2;
+    let xPos=mouseX - rect.left;
+    let yPos=mouseY - rect.top;
     if(xPos<midX && yPos<midY) return "top-left";
     if(xPos>=midX && yPos<midY) return "top-right";
     if(xPos<midX && yPos>=midY) return "bottom-left";
     return "bottom-right";
   }
   gameArea.addEventListener('mousemove',(e)=>{
-    mouseX=e.clientX;
-    mouseY=e.clientY;
+    mouseX=e.clientX; mouseY=e.clientY;
   });
 
-  // FINISH ROUND
+  /********************************************************
+    HANDLE ROUND
+  *********************************************************/
   function handleRoundEnd(success){
     if(success){
       roundScore++;
       gameStats.totalRounds++;
       gameStats[currentDifficulty].roundsPlayed++;
     } else {
-      // lose life
       lives--;
       flashScreenRed();
       sndLoseLife.currentTime=0; sndLoseLife.play().catch(()=>{});
       // shimmer lives
       livesCountEl.classList.add('lifeShimmer');
-      setTimeout(()=>{ livesCountEl.classList.remove('lifeShimmer'); }, 800);
+      setTimeout(()=>{ livesCountEl.classList.remove('lifeShimmer'); },800);
     }
     updateStatsUI(); saveStatsToLocal();
     roundScoreEl.textContent=roundScore;
@@ -1366,16 +1339,18 @@
     else nextRound();
   }
 
-  // FLASH RED
   function flashScreenRed(){
     gameArea.classList.add('lifeLossFlash');
     setTimeout(()=>{gameArea.classList.remove('lifeLossFlash');},600);
   }
 
-  // END GAME
+  /********************************************************
+    END GAME
+  *********************************************************/
   function endGame(){
     roundActive=false;
-    clearTimeout(timerID);clearInterval(countdownInterval);
+    clearTimeout(timerID);
+    clearInterval(countdownInterval);
     if(roundScore>currentHighScore){
       currentHighScore=roundScore;
       gameStats[currentDifficulty].highScore=roundScore;
@@ -1395,34 +1370,29 @@
   });
 
   /********************************************************
-    PAUSE FUNCTIONALITY
+    PAUSE
   *********************************************************/
   pauseOverlay.addEventListener('click',(e)=>{
-    // click outside => unpause
+    // Click outside => unpause
     if(e.target===pauseOverlay) {
       togglePause(false);
     }
   });
-  // Hide question text if paused
   function togglePause(forceEnd){
-    if(!roundActive) return; 
+    if(!roundActive) return;
     paused=!paused;
     pauseOverlay.style.display= paused? 'flex':'none';
     commandText.style.visibility= paused? 'hidden':'visible';
 
     if(forceEnd===true){
-      // we chose to end the game
       endGame();
       return;
     }
     if(!paused){
       // resume
-      // re-create timer with leftover
-      let leftover = parseInt(timeLeftEl.textContent)||0;
-      timerID = setTimeout(()=>{
-        if(!roundActive) return;
-        // if user needed to do something => fail
-        // but let's just fail them
+      let leftover=parseInt(timeLeftEl.textContent)||0;
+      timerID=setTimeout(()=>{
+        if(!roundActive)return;
         handleRoundEnd(false);
       }, leftover*1000);
     } else {
@@ -1438,12 +1408,9 @@
       togglePause();
     }
   });
-  gameArea.addEventListener('click',()=>{
-    if(roundActive && !pauseOverlay.style.display.includes('flex')) {
-      // click => pause
-      togglePause();
-    }
-  });
+
+  // Remove any code that allowed click to ENTER pause
+  // so there's no gameArea click to pause
 
   // End game from pause
   pauseEndGameBtn.addEventListener('click',(e)=>{
