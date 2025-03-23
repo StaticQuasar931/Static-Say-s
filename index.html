@@ -434,7 +434,7 @@
       height: 2px; top: 50%;
     }
 
-    /* SHAPES */
+    /* SHAPES (some big or small). */
     .map1Shape {
       position: absolute;
       display: flex; 
@@ -457,7 +457,7 @@
     .bigCircle { width: 80px; height: 80px; border-radius: 50%; font-size:1.2rem;}
     .smallCircle { width: 40px; height: 40px; border-radius: 50%; font-size:0.8rem;}
 
-    /* Some positions (unchanged from previous) */
+    /* Example positions, 20 shapes */
     #shape1  { top: 80px; left: 50px;   background: red;       color: #fff; }
     #shape2  { top: 80px; right: 70px;  background: blue;      color: #fff; }
     #shape3  { bottom: 70px; left: 50px;  background: black;     color: #fff; }
@@ -787,6 +787,7 @@
       <!-- Quadrant dividing lines -->
       <div id="verticalLine"></div>
       <div id="horizontalLine"></div>
+
       <!-- 20 shapes -->
       <div class="map1Shape square"   id="shape1">1</div>
       <div class="map1Shape circle"   id="shape2">2</div>
@@ -1004,7 +1005,7 @@
   easyBtn.addEventListener('click', () => {
     currentDifficulty = 'easy';
     lives = 4;
-    baseTimeLimit = 9000;
+    baseTimeLimit = 9000;   // triple time
     currentHighScore = gameStats.easy.highScore;
     showRulesOverlay("Easy Mode");
   });
@@ -1049,7 +1050,7 @@
   let currentRound=0;
   let timeLimit=9000;
 
-  // SHAPE DEFINITIONS
+  // SHAPE DEFINITIONS (some have locPhrase for extra variety)
   const shapeDefinitions=[
     { id:"shape1",  color:"red",     shapeType:"square", hasNumber:"1",    locPhrase:"top-left corner" },
     { id:"shape2",  color:"blue",    shapeType:"circle", hasNumber:"2" },
@@ -1184,8 +1185,7 @@
       }
 
     } else {
-      // click
-      // multi-step if staticSays
+      // "click"
       let textParts=[];
       chosenShapes.forEach((sh,i)=>{
         let phrase=shapeObjText(sh);
@@ -1283,12 +1283,17 @@
 
   // SHAPE TEXT
   function shapeObjText(sh){
+    // We do NOT show "cb" or "cbm" in the command text
+    // The colorBlindToggle could change the *visual rendering*, 
+    // but we won't alter the text with any tag or "cb" label.
+    // We'll just produce normal color references:
     let cLabel=sh.color;
-    if(colorBlindToggle.checked) cLabel+=" (CB)";
+
     let shapeLabel="";
     if(sh.shapeType==="bigCircle") shapeLabel="big circle";
     else if(sh.shapeType==="smallCircle") shapeLabel="small circle";
     else shapeLabel=sh.shapeType;
+
     let phrase=cLabel+" "+shapeLabel;
     if(sh.hasNumber && Math.random()>0.3){
       phrase+=` with the number ${sh.hasNumber}`;
@@ -1408,9 +1413,6 @@
       togglePause();
     }
   });
-
-  // Remove any code that allowed click to ENTER pause
-  // so there's no gameArea click to pause
 
   // End game from pause
   pauseEndGameBtn.addEventListener('click',(e)=>{
