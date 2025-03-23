@@ -36,7 +36,9 @@
       text-decoration: none; 
     }
 
-    /* STATIC MENU (top-left) */
+    /********************************************************
+      STATIC MENU (top-left)
+    *********************************************************/
     #staticMenu {
       position: fixed; 
       top: 10px; 
@@ -66,7 +68,9 @@
       background: #666;
     }
 
-    /* SETTINGS BUTTON (top-right) */
+    /********************************************************
+      SETTINGS BUTTON (top-right)
+    *********************************************************/
     #settingsButton {
       position: fixed; 
       top: 10px; 
@@ -86,7 +90,9 @@
       background: #333; 
     }
 
-    /* OVERLAY BASE STYLE */
+    /********************************************************
+      OVERLAY BASE STYLE
+    *********************************************************/
     .overlay {
       position: fixed; 
       top: 0; 
@@ -112,7 +118,9 @@
     .overlay.clickOutsideClose { cursor: pointer; }
     .overlayContent { cursor: auto; }
 
-    /* SETTINGS OVERLAY */
+    /********************************************************
+      SETTINGS OVERLAY
+    *********************************************************/
     #settingsOverlay {
       display: none;
       z-index: 9981;
@@ -142,7 +150,9 @@
       transition: background 0.2s, transform 0.2s;
     }
 
-    /* SHARE OVERLAY */
+    /********************************************************
+      SHARE OVERLAY
+    *********************************************************/
     #shareOverlay {
       display: none;
       z-index: 9990;
@@ -181,7 +191,9 @@
       transition: background 0.2s, transform 0.2s;
     }
 
-    /* QR CODE (bottom-left) */
+    /********************************************************
+      QR CODE (bottom-left)
+    *********************************************************/
     #qrContainer {
       position: fixed; 
       bottom: 10px; 
@@ -199,7 +211,9 @@
       transform: scale(1.05);
     }
 
-    /* GLOBAL STATS (bottom-right) */
+    /********************************************************
+      GLOBAL STATS (bottom-right)
+    *********************************************************/
     #statsContainer {
       position: fixed; 
       bottom: 10px; 
@@ -219,7 +233,9 @@
     }
     #statsContainer strong { font-size: 1.2rem; }
 
-    /* MAIN MENU */
+    /********************************************************
+      MAIN MENU
+    *********************************************************/
     #mainMenu {
       width: 100%; 
       height: 100%; 
@@ -264,7 +280,9 @@
       opacity: 0.5;
     }
 
-    /* DIFFICULTY MENU */
+    /********************************************************
+      DIFFICULTY MENU
+    *********************************************************/
     #difficultyMenu {
       display: none;
       width: 100%; 
@@ -323,7 +341,9 @@
       100% { transform: translate(1px, 1px) rotate(0deg); }
     }
 
-    /* RULES OVERLAY */
+    /********************************************************
+      RULES OVERLAY
+    *********************************************************/
     #rulesOverlay {
       display: none;
       position: fixed; 
@@ -363,7 +383,9 @@
       transition: background 0.2s, transform 0.2s;
     }
 
-    /* GAME AREA */
+    /********************************************************
+      GAME AREA
+    *********************************************************/
     #gameArea {
       display: none; 
       position: relative;
@@ -397,7 +419,7 @@
       height: 2px; top: 50%;
     }
 
-    /* Shapes (some big or small) */
+    /* Shapes */
     .map1Shape {
       position: absolute;
       display: flex; 
@@ -475,10 +497,10 @@
       max-width: 600px;
     }
 
-    /* Move stats slightly lower but above middle line */
+    /* Stats panel at top: 250px */
     #scoreHUD {
       position: absolute; 
-      top: 250px;  /* ADJUSTED */
+      top: 250px; 
       left: 10px;
       background: rgba(0,0,0,0.5); 
       border-radius: 8px;
@@ -490,7 +512,7 @@
     }
     .label { font-weight: bold; }
 
-    /* "No Action" button (unchanged from last version) */
+    /* "No Action" button */
     #noActionBtn {
       position: absolute; 
       bottom: 20px; 
@@ -503,7 +525,7 @@
       font-size: 1rem;
       cursor: pointer;
       z-index: 99;
-      display: none; /* Shown each round */
+      display: none;
       transition: background 0.2s, transform 0.2s;
     }
     #noActionBtn:hover {
@@ -600,7 +622,7 @@
   </style>
 </head>
 <body>
-  <!-- AUDIO -->
+  <!-- AUDIO SAMPLES -->
   <audio id="sndLoseLife" preload="auto">
     <source src="data:audio/wav;base64,UklGRmIAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU0AAA==" type="audio/wav">
   </audio>
@@ -642,11 +664,14 @@
         <label for="soundSlider">Sound Volume:</label><br/>
         <input type="range" id="soundSlider" min="0" max="100" value="50" />
       </div>
+      <!-- FEEDBACK LINK -->
       <div class="settingsRow">
         <a 
           href="https://docs.google.com/forms/d/e/1FAIpQLSfFiegPH6GsWIWERzfbtptJW2GMk4exkrTQsdqlR2-2oj83zA/viewform?usp=sf_link" 
           target="_blank"
-        >Leave feedback via this Google Form</a>
+        >
+          Leave feedback via this Google Form
+        </a>
       </div>
       <div class="settingsRow">
         <button id="openShareOverlayBtn">Share This Game</button>
@@ -730,11 +755,13 @@
       <h2>How to Play "Static Says"</h2>
       <p>
         1) If the command starts with <strong>“Static says...”</strong>, <em>perform it</em>.<br/>
-        2) If it does NOT, <em>do nothing</em>!<br/>
+        2) If it does NOT, <em>do nothing</em> – or click the <strong>No Action</strong> button.<br/>
         3) Each correct action = +1 point. Lose a life if you do it wrong.<br/>
         4) Commands can be <em>click</em>, <em>hover</em>, or <em>cursor position</em> in a quadrant.<br/>
         5) Press <strong>ESC</strong> or <strong>SPACE</strong> to pause/unpause.<br/>
-        (You can only click to <em>exit</em> pause, not enter it.)
+        6) <strong>No Action</strong> button (bottom-right):
+          <br/> - If “Static says,” clicking it = immediate fail
+          <br/> - If “doesn’t say,” clicking it = immediate success
       </p>
       <button id="startGameBtn">Start Game</button>
     </div>
@@ -743,10 +770,11 @@
   <!-- GAME AREA -->
   <div id="gameArea" tabindex="0">
     <div id="map1Container">
-      <!-- quadrant lines -->
+      <!-- Quadrant dividing lines -->
       <div id="verticalLine"></div>
       <div id="horizontalLine"></div>
-      <!-- shapes -->
+
+      <!-- 20 shapes -->
       <div class="map1Shape square"   id="shape1">1</div>
       <div class="map1Shape circle"   id="shape2">2</div>
       <div class="map1Shape square"   id="shape3">3</div>
@@ -863,6 +891,7 @@
 
   // Settings & Share
   const settingsOverlay      = document.getElementById('settingsOverlay');
+  const settingsBox          = document.getElementById('settingsBox');
   const closeSettingsBtn     = document.getElementById('closeSettingsBtn');
   const colorBlindToggle     = document.getElementById('colorBlindToggle');
   const soundSlider          = document.getElementById('soundSlider');
@@ -962,7 +991,7 @@
   easyBtn.addEventListener('click', () => {
     currentDifficulty = 'easy';
     lives = 4;
-    baseTimeLimit = 9000;  
+    baseTimeLimit = 9000;
     currentHighScore = gameStats.easy.highScore;
     showRulesOverlay("Easy Mode");
   });
@@ -982,7 +1011,7 @@
     showRulesOverlay("Hardcore Mode");
   });
 
-  function showRulesOverlay(msg) {
+  function showRulesOverlay(info) {
     difficultyMenu.style.display = 'none';
     gameArea.style.display = 'block';
     rulesOverlay.style.display = 'flex';
@@ -999,7 +1028,7 @@
   });
 
   /********************************************************
-    SHAPES
+    SHAPE DEFINITIONS
   *********************************************************/
   const shapeDefinitions = [
     { id:"shape1",  color:"red",     shapeType:"square",      hasNumber:"1",  locPhrase:"top-left corner" },
@@ -1033,7 +1062,7 @@
   let countdownInterval=null;
   let currentRound=0;
   let timeLimit=9000;
-  let currentStaticSays = false; // for "No Action" button
+  let currentStaticSays = false;
 
   function startGame(){
     qrContainer.style.display='none';
@@ -1080,41 +1109,40 @@
     for(let i=0; i<multiStep; i++){
       let shapeObj = shapeDefinitions[Math.floor(Math.random()*shapeDefinitions.length)];
       let { text, validIDs } = buildSubCommandFromShape(shapeObj);
-      subCommands.push({ text, validIDs, done:false });
+      subCommands.push({ text, validIDs });
     }
 
     // Combine text for multi-step
     let finalCommandText = (staticSays?"Static says: ":"");
     for(let i=0; i<subCommands.length; i++){
       if(i===0){
-        finalCommandText += (commandType==="hover"?"hover over the ":"click on ")+subCommands[i].text;
+        if(commandType==="hover"){
+          finalCommandText += "hover over the "+ subCommands[i].text;
+        } else {
+          finalCommandText += "click on "+ subCommands[i].text;
+        }
       } else {
         finalCommandText += (i===subCommands.length-1) ? " then "+subCommands[i].text : ", then "+subCommands[i].text;
       }
     }
 
-    // Command logic
-    commandText.textContent=finalCommandText;
+    // Show command text
+    commandText.textContent= finalCommandText;
 
-    // Timer
+    // Timer logic
     startTimer();
     timerID=setTimeout(()=>{
       if(!roundActive)return;
-      // If "Static says," user needed to do something => fail
-      // If "doesn't say," doing nothing => success
       if(staticSays) finalizeRound(false);
       else finalizeRound(true);
     }, timeLimit);
 
-    // If commandType==="hover" => we only have subCommands.length=1 in practice
-    // We'll do a simpler approach:
     if(commandType==="hover"){
-      let requiredIDs = subCommands[0].validIDs; // possibly multiple
+      let requiredIDs = subCommands[0].validIDs;
       function mouseOverHandler(e){
         if(!roundActive||paused)return;
-        let cid=e.target.id;
-        if(requiredIDs.includes(cid)){
-          // success if staticSays => yes
+        if(requiredIDs.includes(e.target.id)){
+          // success if "Static says"
           finalizeRound(staticSays?true:false);
         } else if(!staticSays){
           finalizeRound(false);
@@ -1122,7 +1150,7 @@
       }
       shapeDefinitions.forEach(s=>{
         let ref=document.getElementById(s.id);
-        ref.addEventListener('mouseover', mouseOverHandler);
+        ref.addEventListener('mouseover',mouseOverHandler);
       });
 
       function finalizeRound(success){
@@ -1135,37 +1163,32 @@
         clearInterval(countdownInterval);
         shapeDefinitions.forEach(s=>{
           let ref=document.getElementById(s.id);
-          ref.removeEventListener('mouseover', mouseOverHandler);
+          ref.removeEventListener('mouseover',mouseOverHandler);
         });
         noActionBtn.style.display='none';
       }
 
     } else if(commandType==="quadrant"){
-      // do nothing more here, the setTimeout handles success/fail
-      // user can't do anything except "No Action" button
-    } else if(commandType==="click"){
-      // Multi-step subCommands array
-      let subIndex=0;
-
-      // user must click a shape in subCommands[subIndex].validIDs => next subIndex
+      // rely on timer to finalize
+    } else { 
+      // "click"
+      let subIndex=0; 
       function clickHandler(e){
         if(!roundActive||paused)return;
         let cid=e.target.id;
-
-        // If subCommands[subIndex].validIDs includes cid => success for that step
-        if(subCommands[subIndex].validIDs.includes(cid)){
+        let validIDs = subCommands[subIndex].validIDs;
+        if(validIDs.includes(cid)){
           subIndex++;
           if(subIndex>=subCommands.length){
             finalizeRound(true);
           }
         } else {
-          // wrong shape => fail
           finalizeRound(false);
         }
       }
       shapeDefinitions.forEach(s=>{
         let ref=document.getElementById(s.id);
-        ref.addEventListener('click', clickHandler);
+        ref.addEventListener('click',clickHandler);
       });
 
       function finalizeRound(success){
@@ -1178,64 +1201,56 @@
         clearInterval(countdownInterval);
         shapeDefinitions.forEach(s=>{
           let ref=document.getElementById(s.id);
-          ref.removeEventListener('click', clickHandler);
+          ref.removeEventListener('click',clickHandler);
         });
         noActionBtn.style.display='none';
       }
     }
   }
 
-  // Build a sub-command: returns { text, validIDs }.
-  // If we mention location or number, that's the *specific* shape.
-  // If we skip location & number, any shape that matches color & shapeType is valid.
-  function buildSubCommandFromShape(shapeObj){
-    let colorLabel = shapeObj.color;
-    let shapeLabel = "";
-    if(shapeObj.shapeType==="bigCircle") shapeLabel="big circle";
-    else if(shapeObj.shapeType==="smallCircle") shapeLabel="small circle";
-    else shapeLabel=shapeObj.shapeType;
+  // Build subcommand => { text, validIDs }
+  function buildSubCommandFromShape(sh){
+    let colorLabel= sh.color;
+    let shapeLabel= "";
+    if(sh.shapeType==="bigCircle") shapeLabel="big circle";
+    else if(sh.shapeType==="smallCircle") shapeLabel="small circle";
+    else shapeLabel=sh.shapeType;
 
     let textParts = [colorLabel, shapeLabel];
-    let validIDs=[];
-
-    // Decide if we mention # or location
-    let mentionNumber = (Math.random()>0.7); // 30% chance
-    let mentionLocation = (Math.random()>0.5 && shapeObj.locPhrase); // 50% chance if shapeObj has locPhrase
+    let mentionNumber = (Math.random()>0.7); 
+    let mentionLocation = (Math.random()>0.5 && sh.locPhrase);
 
     if(mentionNumber){
-      textParts.push(`with the number ${shapeObj.hasNumber}`);
+      textParts.push(`with the number ${sh.hasNumber}`);
     }
     if(mentionLocation){
-      textParts.push(`in the ${shapeObj.locPhrase}`);
+      textParts.push(`in the ${sh.locPhrase}`);
     }
-
     let textDesc = textParts.join(" ");
 
-    // Now build validIDs set:
-    // If we mention number => it must match color, shapeType, AND that number
-    // If we mention location => it must match that exact shape ID
-    // If we mention neither => any shape that matches color & shapeType is valid
+    // Build validIDs:
+    let validIDs=[];
     if(mentionLocation){
-      // exact shape only
-      validIDs = [shapeObj.id];
+      // exact shape
+      validIDs=[sh.id];
     } else if(mentionNumber){
-      // must match color, shapeType, hasNumber
+      // match color + shapeType + hasNumber
       validIDs = shapeDefinitions
-        .filter(s=> s.color===shapeObj.color && s.shapeType===shapeObj.shapeType && s.hasNumber===shapeObj.hasNumber)
+        .filter(s=> s.color===sh.color && s.shapeType===sh.shapeType && s.hasNumber===sh.hasNumber)
         .map(s=> s.id);
     } else {
-      // no number, no location => match color & shapeType
+      // just color + shapeType
       validIDs = shapeDefinitions
-        .filter(s=> s.color===shapeObj.color && s.shapeType===shapeObj.shapeType)
+        .filter(s=> s.color===sh.color && s.shapeType===sh.shapeType)
         .map(s=> s.id);
     }
 
     return { text: textDesc, validIDs };
   }
 
-  // "No Action" Button logic => if "Static says," immediate fail, else immediate success
-  noActionBtn.addEventListener('click', ()=>{
-    if(!roundActive||paused) return;
+  // "No Action" button
+  noActionBtn.addEventListener('click',()=>{
+    if(!roundActive||paused)return;
     finalizeNoActionClick(!currentStaticSays);
   });
   function finalizeNoActionClick(success){
@@ -1248,7 +1263,7 @@
 
   function startTimer(){
     let tSec=Math.ceil(timeLimit/1000);
-    timeLeftEl.textContent = tSec+"s";
+    timeLeftEl.textContent= tSec+"s";
     let timeRem=tSec;
     countdownInterval=setInterval(()=>{
       if(!paused){
@@ -1257,31 +1272,28 @@
           timeRem=0;
           clearInterval(countdownInterval);
         }
-        timeLeftEl.textContent = timeRem+"s";
+        timeLeftEl.textContent= timeRem+"s";
       }
     },1000);
   }
 
-  // MOUSE QUADRANT
+  // Quadrant detection
   let mouseX=0, mouseY=0;
   function getMouseQuadrant(){
     let rect=gameArea.getBoundingClientRect();
     let midX=rect.width/2, midY=rect.height/2;
-    let xPos=mouseX - rect.left;
-    let yPos=mouseY - rect.top;
+    let xPos=mouseX-rect.left;
+    let yPos=mouseY-rect.top;
     if(xPos<midX && yPos<midY) return "top-left";
     if(xPos>=midX && yPos<midY) return "top-right";
     if(xPos<midX && yPos>=midY) return "bottom-left";
     return "bottom-right";
   }
   gameArea.addEventListener('mousemove',(e)=>{
-    mouseX=e.clientX; 
-    mouseY=e.clientY;
+    mouseX=e.clientX; mouseY=e.clientY;
   });
 
-  /********************************************************
-    HANDLE ROUND END
-  *********************************************************/
+  // Round end
   function handleRoundEnd(success){
     if(success){
       roundScore++;
@@ -1289,17 +1301,17 @@
       gameStats[currentDifficulty].roundsPlayed++;
     } else {
       lives--;
-      // 0.1s flash
+      // quick 0.1s flash
       gameArea.classList.add('lifeLossFlash');
       setTimeout(()=>{ gameArea.classList.remove('lifeLossFlash'); },100);
 
       sndLoseLife.currentTime=0; 
       sndLoseLife.play().catch(()=>{});
-      // shimmer lives
+
       livesCountEl.classList.add('lifeShimmer');
       setTimeout(()=>{ livesCountEl.classList.remove('lifeShimmer'); },800);
     }
-    updateStatsUI();
+    updateStatsUI(); 
     saveStatsToLocal();
 
     roundScoreEl.textContent=roundScore;
@@ -1309,9 +1321,6 @@
     else nextRound();
   }
 
-  /********************************************************
-    END GAME
-  *********************************************************/
   function endGame(){
     roundActive=false;
     clearTimeout(timerID);
@@ -1356,7 +1365,6 @@
       return;
     }
     if(!paused){
-      // resume
       let leftover=parseInt(timeLeftEl.textContent)||0;
       timerID=setTimeout(()=>{
         if(!roundActive)return;
